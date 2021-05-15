@@ -1,0 +1,24 @@
+---
+title: "team_git_star_assignment4"
+author: "ZIYAO WANG (Billy)"
+date: "2021/5/15"
+output: html_document
+---
+
+Research questions:
+
+Section 1 - Table 1
+- [ ] For each LGA , which police region recorded maximum incidents?
+- [ ] How did the trend of incidents recorded in those police regions varied across the years.
+
+Section 2
+
+- [ ]  For each LGA , which offence_subdivision, recorded maximum incidents
+- [ ] For each LGA,Which offence_subgroup was most recorded in the previous found offence_subdivision's?
+- [ ] What was the trend of each offence_subgroup found over the years?
+
+Section 3
+
+- [ ]  For each Suburb/Town, which offence_subdivision, recorded maximum incidents
+- [ ] For each Suburb/Town,Which offence_subgroup was most recorded in the previous found offence_subdivision's?
+
