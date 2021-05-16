@@ -104,8 +104,6 @@ Suburb_imp <- data3 %>%
   arrange(Year,desc(Total_Incidents)) %>% 
   slice_max(Total_Incidents,n = 10) 
 
-Suburb1 <- unique(Suburb_imp$Suburb)
-
 data3 %>% 
   filter(Suburb %in% unique(Suburb_imp$Suburb)) %>% 
   group_by(Suburb,Offence_Subdivision) %>% 
