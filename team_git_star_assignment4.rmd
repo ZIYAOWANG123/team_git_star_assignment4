@@ -33,7 +33,9 @@ library(naniar)
 library(ggplot2)
 library(plotly)
 library(here)
-library(readxl)
+library(readxl) 
+library(kableExtra)
+library(tidytext)
 ```
 
 ```{r read-file,include=FALSE}
@@ -42,5 +44,34 @@ data3 <- read_excel(here::here("data/Data_Tables_LGA_Criminal_Incidents_Year_End
 
 ```{r clean,include=FALSE}
 miss_var_summary(data3)
+data3 <- data3 %>% 
+  rename(Month = `Year ending`,
+         LGA = `Local Government Area`,
+         Suburb = `Suburb/Town Name`,
+         Offence_Division = `Offence Division`,
+         Offence_Subdivision = `Offence Subdivision`,
+         Offence_Subgroup = `Offence Subgroup`,
+         Incidents_Recorded = `Incidents Recorded`)
+```
+
+What are the top 10 Suburb's recorded with most number of incidents in each Year ?
+
+```{r Q1,echo=TRUE,fig.width=8,fig.height=12,fig.cap="Top 10 Suburb with most incidents recorded"}
+data3 %>% 
+  group_by(Year,Suburb) %>%
+  summarise(Total_Incidents = sum(Incidents_Recorded)) %>% 
+  arrange(Year,desc(Total_Incidents)) %>% 
+  slice_max(Total_Incidents,n = 10) %>% 
+  mutate(Suburb1 = reorder_within(Suburb,Total_Incidents,Year)) %>% 
+  ggplot(aes(x=Total_Incidents ,
+             y=Suburb1,
+             fill = Suburb)) +
+  geom_col() +
+  geom_text(aes(label = Total_Incidents)) +
+  scale_y_reordered() +
+  ylab("Suburb") +
+  xlab("No. of Incidents") +
+  ggtitle("Top 10 Suburb with most incidents recorded in each Years") +
+  facet_wrap(~Year,ncol = 1, scales = "free")
 ```
 
