@@ -74,4 +74,23 @@ data3 %>%
   ggtitle("Top 10 Suburb with most incidents recorded in each Years") +
   facet_wrap(~Year,ncol = 1, scales = "free")
 ```
+What were the top 10 Offence's in each year ?
+
+```{r Q2,echo=FALSE,fig.width=8,fig.height=12,fig.cap="Top 10 Offences recorded"}
+data3 %>% 
+  group_by(Year,Offence_Subdivision) %>% 
+  summarise(Tot_incidents = sum(Incidents_Recorded)) %>% 
+  arrange(Year,desc(Tot_incidents)) %>%
+  slice_max(Tot_incidents,n = 10) %>% 
+  mutate(Offence1 = reorder_within(Offence_Subdivision,Tot_incidents,Year)) %>% 
+    ggplot(aes(y= Offence1,
+         x= Tot_incidents,
+         fill = Offence_Subdivision)) +
+  geom_col() +
+  geom_text(aes(label = Tot_incidents)) +
+  scale_y_reordered() +
+  ylab("Type of Offece") +
+  xlab("No of Incidents") +
+  facet_wrap(~Year,ncol = 1,scales = "free")
+```
 
