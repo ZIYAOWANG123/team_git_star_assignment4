@@ -40,3 +40,7 @@ library(readxl)
 data3 <- read_excel(here::here("data/Data_Tables_LGA_Criminal_Incidents_Year_Ending_December_2020.xlsx"),sheet = 4)
 ```
 
+```{r clean,include=FALSE}
+miss_var_summary(data3)
+```
+
