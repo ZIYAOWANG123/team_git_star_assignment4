@@ -32,5 +32,11 @@ library(dplyr)
 library(naniar)
 library(ggplot2)
 library(plotly)
+library(here)
+library(readxl)
+```
+
+```{r read-file,include=FALSE}
+data3 <- read_excel(here::here("data/Data_Tables_LGA_Criminal_Incidents_Year_Ending_December_2020.xlsx"),sheet = 4)
 ```
 
