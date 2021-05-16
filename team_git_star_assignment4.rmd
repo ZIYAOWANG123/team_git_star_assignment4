@@ -22,3 +22,15 @@ Section 3
 - [ ]  For each Suburb/Town, which offence_subdivision, recorded maximum incidents
 - [ ] For each Suburb/Town,Which offence_subgroup was most recorded in the previous found offence_subdivision's?
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = FALSE, message = FALSE,warning = FALSE)
+```
+
+```{r read-lib,include=FALSE}
+library(tidyverse)
+library(dplyr)
+library(naniar)
+library(ggplot2)
+library(plotly)
+```
+
