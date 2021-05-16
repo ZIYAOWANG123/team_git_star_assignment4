@@ -54,7 +54,7 @@ data3 <- data3 %>%
          Incidents_Recorded = `Incidents Recorded`)
 ```
 
-What are the top 10 Suburb's recorded with most number of incidents in each Year ?
+## What are the top 10 Suburb's recorded with most number of incidents in each Year ?
 
 ```{r Q1,echo=TRUE,fig.width=8,fig.height=12,fig.cap="Top 10 Suburb with most incidents recorded"}
 data3 %>% 
@@ -74,7 +74,8 @@ data3 %>%
   ggtitle("Top 10 Suburb with most incidents recorded in each Years") +
   facet_wrap(~Year,ncol = 1, scales = "free")
 ```
-What were the top 10 Offence's in each year ?
+
+## What were the top 10 Offence's in each year ?
 
 ```{r Q2,echo=FALSE,fig.width=8,fig.height=12,fig.cap="Top 10 Offences recorded"}
 data3 %>% 
@@ -92,5 +93,36 @@ data3 %>%
   ylab("Type of Offece") +
   xlab("No of Incidents") +
   facet_wrap(~Year,ncol = 1,scales = "free")
+```
+
+## What are the top 10 Offences for the most common Suburb found in Q1?
+
+```{r Q3,echo=FALSE,fig.width=8,fig.height=12,,fig.cap="Top 10 Offfences Suburrb wise"}
+Suburb_imp <- data3 %>% 
+  group_by(Year,Suburb) %>%
+  summarise(Total_Incidents = sum(Incidents_Recorded)) %>% 
+  arrange(Year,desc(Total_Incidents)) %>% 
+  slice_max(Total_Incidents,n = 10) 
+
+Suburb1 <- unique(Suburb_imp$Suburb)
+
+data3 %>% 
+  filter(Suburb %in% unique(Suburb_imp$Suburb)) %>% 
+  group_by(Suburb,Offence_Subdivision) %>% 
+  summarise(Tot_incidents = sum(Incidents_Recorded)) %>% 
+  slice_max(Tot_incidents,n = 10) %>% 
+  mutate(offence1 = reorder_within(Offence_Subdivision,Tot_incidents,Suburb)) %>% 
+  ggplot(aes(x =Tot_incidents,
+             y= offence1,,
+             fill = Offence_Subdivision)) +
+  geom_col() +
+  geom_text(aes(label = Tot_incidents)) +
+  scale_y_reordered() +
+  ylab("Type of Offfence") +
+  xlab("No of Incidennts") +
+  ggtitle("Top 10 Offence for the most common Suburb with incidents found in each year") +
+  facet_wrap(~Suburb,ncol = 2,scales = "free")
+  
+
 ```
 
