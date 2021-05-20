@@ -23,11 +23,11 @@ Section 3
 - [ ]  For each Suburb/Town, which offence_subdivision, recorded maximum incidents
 - [ ] For each Suburb/Town,Which offence_subgroup was most recorded in the previous found offence_subdivision's?
 
-
-
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, eval = TRUE, fig.align = "center", fig.path = "Figures/")
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE, fig.align = "center", fig.path = "Figures/",message = FALSE, warning = FALSE)
 ```
+
+
 
 ```{r loadlibrary, message=FALSE}
 library(tidyverse)
@@ -39,14 +39,13 @@ library(ggResidpanel)
 library(bookdown)
 ```
 
-```{r readdata}
 dat <- read_excel("data/Data_Tables_LGA_Criminal_Incidents_Year_Ending_December_2020.xlsx", sheet=2)
 
 dat <- dat %>% 
   select(c(Year, `Police Region`, `Local Government Area`, `Incidents Recorded`)) 
 
-dat_new <- dat %>% write.csv("data/LGA_Criminal_data2020.csv")
 
+```{r readdata}
 dat1 <- read.csv("data/LGA_Criminal_data2020.csv")
 ```
 
@@ -59,25 +58,61 @@ dat_tot <- dat1 %>%
   arrange(-Total_Incidents)
 
 table1 <- dat_tot %>% 
-  kable(caption = "Number of Incidents Recorded in different Police Region", align = 'c') %>% 
+  knitr::kable(caption = "Number of Incidents Recorded in different Police Region", align = 'c') %>% 
   kable_styling(bootstrap_options = c("striped", "hover"))
+table1
 
 ```
+To obtain the movement of the incidents recorded for each police region over the years.
 
-
-```{r}
+```{r figure1, fig.height=8, fig.align='center'}
 dat_var <- dat1 %>% 
   filter(`Local.Government.Area` == "Total") %>% 
   group_by(Year, `Police.Region`) %>% 
   summarise(Total_Incidents = sum(`Incidents.Recorded`))
 
-ggplot(dat_var, aes(x= Year, y = Total_Incidents),
+figure1 <- ggplot(dat_var, aes(x= Year, y = Total_Incidents),
        color = `Police.Region`)+
   geom_line()+
   theme_bw()+
-  facet_wrap(~ `Police.Region`)
+  facet_wrap(~ `Police.Region`, scales = "free",ncol=2)+
+  scale_fill_brewer(palette = "Dark2")
+figure1
 ```
 
+In the most incidents recorded police region "1 North West Metro", investigating through observing the number of incident recorded in different local government areas over time.
+
+```{r figure2, fig.align='center', fig.height=11}
+dat_North <- dat1 %>% 
+  filter(Police.Region == "1 North West Metro") %>% 
+  select(-X)
+
+trend <- dat_North %>% 
+  group_by(Local.Government.Area, Year) %>% 
+  summarise(Total_Incidents = sum(`Incidents.Recorded`)) %>% 
+  arrange(-Total_Incidents) %>% 
+  filter(Local.Government.Area %in% c("Melbourne", 
+                                      "Hume", 
+                                      "Brimbank", 
+                                      "Wyndham", 
+                                      "Whittlesea", 
+                                      "Moreland",
+                                      "Banyule",
+                                      "Darebin",
+                                      "Hobsons Bay",
+                                      "Maribyrnong",
+                                      "Melton",
+                                      "Moonee Valley",
+                                      "Nillumbik",
+                                      "Yarra"))
+
+figure2 <- ggplot(trend, aes(x= Year, y = Total_Incidents))+
+  geom_line()+
+  facet_wrap(~ `Local.Government.Area`, scales = "free",ncol=2)+
+  scale_fill_brewer(palette = "Dark2")
+figure2
+
+```
 
 
 
