@@ -8,6 +8,7 @@ output: html_document
 Research questions:
 
 Section 1 - Table 1
+
 - [ ] For each LGA , which police region recorded maximum incidents?
 - [ ] How did the trend of incidents recorded in those police regions varied across the years.
 
@@ -21,4 +22,46 @@ Section 3
 
 - [ ]  For each Suburb/Town, which offence_subdivision, recorded maximum incidents
 - [ ] For each Suburb/Town,Which offence_subgroup was most recorded in the previous found offence_subdivision's?
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = FALSE, eval = TRUE, message = FALSE, warning=FALSE)
+```
+
+```{r loadlibrary, message=FALSE}
+library(tidyverse)
+library(readxl)
+library(haven)
+library(ggplot2)
+library(kableExtra)
+library(ggResidpanel)
+library(bookdown)
+```
+
+```{r readdata}
+dat <- read_excel("data/Data_Tables_LGA_Criminal_Incidents_Year_Ending_December_2020.xlsx", sheet=2)
+
+dat <- dat %>% 
+  select(c(Year, `Police Region`, `Local Government Area`, `Incidents Recorded`))
+```
+
+```{r table1, message=FALSE}
+dat_tot <- dat %>% 
+  filter(`Local Government Area` == "Total") %>% 
+  group_by(`Police Region`) %>% 
+  summarise(Total_Incidents = sum(`Incidents Recorded`)) %>% 
+  arrange(-Total_Incidents)
+
+table1 <- dat_tot %>% 
+  kable(caption = "Number of Incidents Recorded in different Police Region", align = 'c') %>% 
+  kable_styling(bootstrap_options = c("striped", "hover"))
+
+```
+
+
+
+
+
+
 
