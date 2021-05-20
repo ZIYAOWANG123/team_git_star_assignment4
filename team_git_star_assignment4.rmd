@@ -2,15 +2,23 @@
 title: "team_git_star_assignment4"
 author: "ZIYAO WANG (Billy)"
 date: "2021/5/15"
-output: html_document
+output:
+  bookdown::html_document2: default
+  toc: true
+Subtitle: "Analysis report for happiness score in 2021"
 ---
 
-Research questions:
+# Introduction
+
+
+
+# Research questions:
 
 Section 1 - Table 1
 
-- [ ] For each LGA , which police region recorded maximum incidents?
-- [ ] How did the trend of incidents recorded in those police regions varied across the years.
+- [ ] Which police region has the greatest number of incidents recorded?
+- [ ] How did the trend of incidents recorded in those police regions varied across the years?
+- [ ] What is the trend of incidents recorded in North West Metro's local government areas changes over time?
 
 Section 2
 
@@ -24,12 +32,10 @@ Section 3
 - [ ] For each Suburb/Town,Which offence_subgroup was most recorded in the previous found offence_subdivision's?
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, eval = TRUE, fig.align = "center", fig.path = "Figures/",message = FALSE, warning = FALSE)
+knitr::opts_chunk$set(echo = FALSE, eval = TRUE, fig.align = "center", fig.path = "Figures/",message = FALSE, warning = FALSE)
 ```
 
-
-
-```{r loadlibrary, message=FALSE}
+```{r loadlibrary, message=FALSE, include=FALSE}
 library(tidyverse)
 library(readxl)
 library(haven)
@@ -39,17 +45,25 @@ library(ggResidpanel)
 library(bookdown)
 ```
 
+```{r cleandata, include=FALSE}
 dat <- read_excel("data/Data_Tables_LGA_Criminal_Incidents_Year_Ending_December_2020.xlsx", sheet=2)
 
 dat <- dat %>% 
   select(c(Year, `Police Region`, `Local Government Area`, `Incidents Recorded`)) 
-
-
-```{r readdata}
-dat1 <- read.csv("data/LGA_Criminal_data2020.csv")
 ```
 
-2011-2020 the total numeber of incidents recorded for each police region.
+
+```{r readdata, include=FALSE}
+dat1 <- read.csv("data/LGA_Criminal_data2020.csv")
+```
+# Section 1
+
+Note: The data for section 1 data analysis has excluded the criminal incidents where the geographic location is unknown. For further information on these geographic locations please refer to the Explanatory Notes and Glossary on the [website](https://www.crimestatistics.vic.gov.au/about-the-data/explanatory-notes#Data%20source%20%E2%80%93%20Victoria%20Police).
+
+## Q1 Which police region has the greatest number of incidents recorded?
+
+From the table \@ref(tab:table1), it shows an overview of the total number of incidents recorded for each police region from 2011 to 2020. It indicates that the North West Metro police region has recorded maximum incidents during the period. 
+
 ```{r table1, message=FALSE}
 dat_tot <- dat1 %>% 
   filter(`Local.Government.Area` == "Total") %>% 
@@ -63,9 +77,15 @@ table1 <- dat_tot %>%
 table1
 
 ```
-To obtain the movement of the incidents recorded for each police region over the years.
+## Q2 How did the trend of incidents recorded in those police regions varied across the years? 
 
-```{r figure1, fig.height=8, fig.align='center'}
+Figure \@ref(fig:total) presents the movement of the incidents recorded for each police region over time. 
+
+In the four main police regions of Victoria, it illustrates an evident fact that the number of incidents recorded has reached the peak around early 2016, then has a sudden pungle afterward.
+
+The possible reason behind may be that the large decrease on the number of burglary and theft from 2016 to 2017, according to the report from [Victoria crime statistics](https://www.crimestatistics.vic.gov.au/crime-statistics/latest-victorian-crime-data/victim-reports-2).
+
+```{r total, fig.height=8, fig.align='center'}
 dat_var <- dat1 %>% 
   filter(`Local.Government.Area` == "Total") %>% 
   group_by(Year, `Police.Region`) %>% 
@@ -80,9 +100,18 @@ figure1 <- ggplot(dat_var, aes(x= Year, y = Total_Incidents),
 figure1
 ```
 
-In the most incidents recorded police region "1 North West Metro", investigating through observing the number of incident recorded in different local government areas over time.
+## Q3 What is the trend of incidents recorded in North West Metro's local government areas changes over time?
 
-```{r figure2, fig.align='center', fig.height=11}
+The observation from table \@ref(tab:table1) triggers an interest for further investigation on the North West Metro police region. 
+
+Since it is the most incidents recorded region, constructing a figure \@ref(fig:north) to observe the change of the number of incidents recorded in different local government areas may provide some insights. 
+
+The figures suggest that there is a tendency that the number of incidents recorded is increasing since 2019. This can provide some suggestions to the government in terms of adjusting the public safety policy and assigning the police resources. 
+
+Yet, few exceptions such as Hobsons Bay, Moonee Valley and Banyule, the reason maybe they are not the major resident area hance fewer criminal activities occurrence.
+
+
+```{r north, fig.align='center', fig.height=11}
 dat_North <- dat1 %>% 
   filter(Police.Region == "1 North West Metro") %>% 
   select(-X)
