@@ -118,4 +118,25 @@ Q3graph <- data3 %>%
   geom_col() 
   ggplotly(Q3graph)
 ```
+## What is the trend of top 2 offences in each year w.r.t most common Suburb?
+
+```{r ,fig.width=10,fig.height=10,Fg.cap="Trend of Top 2 Offences in each year w.r.t Suburb" }
+Q4graoh <- data3 %>% 
+  filter(Suburb %in% unique(Suburb_imp$Suburb)) %>% 
+  group_by(Year,Suburb,Offence_Subdivision) %>% 
+  summarise(Tot_incidents = sum(Incidents_Recorded)) %>% 
+  slice_max(Tot_incidents,n = 2) %>% 
+  ggplot(aes(x= as.numeric(Year),
+             y =Tot_incidents,
+             color = Offence_Subdivision)) +
+  geom_line() +
+  geom_point() +
+  scale_x_continuous() +
+  xlab("Year") +
+  ylab("Total_incidents") +
+  facet_wrap(~Suburb)
+ggplotly(Q4graoh)
+
+```
+
 
