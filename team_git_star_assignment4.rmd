@@ -4,7 +4,16 @@ author: "ZIYAO WANG (Billy)"
 date: "2021/5/15"
 output: html_document
 ---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 
+#loading packages
+library(tidyverse) 
+library(plotly)
+library(here)
+library(readxl)
+library(kableExtra)
+```
 Research questions:
 
 Section 1 - Table 1
@@ -14,8 +23,86 @@ Section 1 - Table 1
 Section 2
 
 - [ ]  For each LGA , which offence_subdivision, recorded maximum incidents
+```{r read-data, include=FALSE}
+criminaldata <- read_excel("data/Data_Tables_LGA_Criminal_Incidents_Year_Ending_December_2020.xlsx", sheet = 4)
+```
+```{r datacleaning, include=FALSE}
+criminaluse <- criminaldata %>% 
+  select(Year,
+         `Local Government Area`,
+         `Offence Subdivision`,
+         `Incidents Recorded`)
+```
+```{r vis1, fig.width=10, fig.cap="The offence_subdivision of maximum incidents in each LGA"}
+  criminalfinal<- criminaluse %>% 
+  group_by(`Local Government Area`, `Offence Subdivision` ) %>% 
+    summarise(incidents = sum(`Incidents Recorded`)) 
+
+data<- criminalfinal %>% arrange(desc(incidents)) %>%
+slice(1) %>% 
+ggplot(aes(`Local Government Area`,
+       incidents,
+       fill = `Offence Subdivision` )) +
+  geom_col()+
+   ggtitle("The offence_subdivision of maximum incidents in each LGA")+
+  theme(axis.text.x = element_blank()) 
+ ggplotly(data)
+```
+
+```{r vis2, fig.width=10, fig.cap="The offence_subdivision of maximum incidents in each LGA"}
+  criminalfinal2<- criminaluse %>% 
+  group_by(Year,`Offence Subdivision` ) %>% 
+    summarise(incidents = sum(`Incidents Recorded`)) %>% 
+ggplot(aes(Year,
+       incidents,
+       color = `Offence Subdivision` )) +
+  geom_line()+
+   ggtitle("Each offence_subdivision's incidents in each year")
+ ggplotly(criminalfinal2)
+```
+
 - [ ] For each LGA,Which offence_subgroup was most recorded in the previous found offence_subdivision's?
+```{r datacleaning2, include=FALSE}
+criminaluse2 <- criminaldata %>% 
+  select(Year,
+         `Offence Subgroup`,
+         `Offence Subdivision`,
+         `Incidents Recorded`) %>% 
+  filter(`Offence Subdivision` == "B40 Theft")
+```
+```{r vis3, fig.width=10, fig.cap="The trend of each offence_subdivision"}
+  criminalfinal3<- criminaluse2 %>% 
+  group_by(Year, `Offence Subgroup`) %>% 
+    summarise(incidents = sum(`Incidents Recorded`)) %>% 
+ggplot(aes(Year,
+       incidents,
+       color = `Offence Subgroup` )) +
+  geom_line()+
+   ggtitle("Incidents of each offence_subgroup")
+ ggplotly(criminalfinal3)
+```
 - [ ] What was the trend of each offence_subgroup found over the years?
+```{r datacleaning3, include=FALSE}
+criminaluse3 <- criminaldata %>% 
+  select(Year,
+         `Offence Subgroup`,
+         `Incidents Recorded`)
+```
+```{r vis4, fig.width=10, fig.cap="The trend of each offence_subdivision"}
+  criminalfinal4<- criminaluse3 %>% 
+  group_by(Year, `Offence Subgroup`) %>% 
+    summarise(incidents = sum(`Incidents Recorded`)) %>% 
+  arrange(desc(incidents)) %>% 
+  head(100) %>% 
+ggplot(aes(Year,
+       incidents,
+       color = `Offence Subgroup` )) +
+  geom_line()+
+   ggtitle("Incidents of each offence_subgroup")
+ ggplotly(criminalfinal4)
+```
+
+
 
 Section 3
 
