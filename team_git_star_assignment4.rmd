@@ -54,6 +54,18 @@ data3 <- data3 %>%
          Incidents_Recorded = `Incidents Recorded`)
 ```
 
+#W What are the top 10 Suburbs wth maximum no of incidents so far?
+
+```{r Q1-table,echo=FALSE}
+data3 %>% 
+  group_by(Suburb) %>%
+  summarise(Total_Incidents = sum(Incidents_Recorded)) %>% 
+  slice_max(Total_Incidents,n = 10) %>% 
+  kable(caption = "Suburbs with maximum incidents over the years") %>% 
+  kable_styling(bootstrap_options = c("striped","hover","basic"))
+```
+
+
 ## What are the top 10 Suburb's recorded with most number of incidents in each Year ?
 
 ```{r Q1,echo=TRUE,fig.width=8,fig.height=15,fig.cap="Top 10 Suburb with most incidents recorded"}
@@ -120,7 +132,7 @@ Q3graph <- data3 %>%
 ```
 ## What is the trend of top 2 offences in each year w.r.t most common Suburb?
 
-```{r ,fig.width=10,fig.height=10,Fg.cap="Trend of Top 2 Offences in each year w.r.t Suburb" }
+```{r Q4,fig.width=10,fig.height=10,Fg.cap="Trend of Top 2 Offences in each year w.r.t Suburb" }
 Q4graoh <- data3 %>% 
   filter(Suburb %in% unique(Suburb_imp$Suburb)) %>% 
   group_by(Year,Suburb,Offence_Subdivision) %>% 
