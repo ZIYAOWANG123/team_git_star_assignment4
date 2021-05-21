@@ -85,6 +85,7 @@ In the four main police regions of Victoria, it illustrates an evident fact that
 
 The possible reason behind may be that the large decrease on the number of burglary and theft from 2016 to 2017, according to the report from [Victoria crime statistics](https://www.crimestatistics.vic.gov.au/crime-statistics/latest-victorian-crime-data/victim-reports-2).
 
+Additionally, this report states that the number of deception cases is in a continuous increase, which may due to the convenience of technology of e-mail, mobile phones and the internet. Thus, it may highlight some areas for re-enforcement in the future.
 ```{r total, fig.height=8, fig.align='center'}
 dat_var <- dat1 %>% 
   filter(`Local.Government.Area` == "Total") %>% 
