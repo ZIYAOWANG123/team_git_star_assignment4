@@ -43,6 +43,7 @@ library(ggplot2)
 library(kableExtra)
 library(ggResidpanel)
 library(bookdown)
+library(plotly)
 ```
 
 ```{r cleandata, include=FALSE}
@@ -85,8 +86,9 @@ In the four main police regions of Victoria, it illustrates an evident fact that
 
 The possible reason behind may be that the large decrease on the number of burglary and theft from 2016 to 2017, according to the report from [Victoria crime statistics](https://www.crimestatistics.vic.gov.au/crime-statistics/latest-victorian-crime-data/victim-reports-2).
 
-Additionally, this report states that the number of deception cases is in a continuous increase, which may due to the convenience of technology of e-mail, mobile phones and the internet. Thus, it may highlight some areas for re-enforcement in the future.
-```{r total, fig.height=8, fig.align='center'}
+Additionally, this report states that the number of deception cases is in a continuous increase, which may due to the convenience of technology of e-mail, mobile phones and the internet. Thus, it may highlight some areas for re-enforcement in the future, such as cyber security and private data privacy.
+
+```{r total, fig.cap = "Total number of incidents recorded in each police region", fig.height=8, fig.align='center',fig.width=12}
 dat_var <- dat1 %>% 
   filter(`Local.Government.Area` == "Total") %>% 
   group_by(Year, `Police.Region`) %>% 
@@ -98,7 +100,7 @@ figure1 <- ggplot(dat_var, aes(x= Year, y = Total_Incidents),
   theme_bw()+
   facet_wrap(~ `Police.Region`, scales = "free",ncol=2)+
   scale_fill_brewer(palette = "Dark2")
-figure1
+ggplotly(figure1)
 ```
 
 ## Q3 What is the trend of incidents recorded in North West Metro's local government areas changes over time?
@@ -112,7 +114,7 @@ The figures suggest that there is a tendency that the number of incidents record
 Yet, few exceptions such as Hobsons Bay, Moonee Valley and Banyule, the reason maybe they are not the major resident area hance fewer criminal activities occurrence.
 
 
-```{r north, fig.align='center', fig.height=11}
+```{r north, fig.cap = "Crimial activity trend in different suburbs from North West Metro", fig.align='center', fig.height=11,fig.width=10}
 dat_North <- dat1 %>% 
   filter(Police.Region == "1 North West Metro") %>% 
   select(-X)
@@ -139,8 +141,9 @@ trend <- dat_North %>%
 figure2 <- ggplot(trend, aes(x= Year, y = Total_Incidents))+
   geom_line()+
   facet_wrap(~ `Local.Government.Area`, scales = "free",ncol=2)+
-  scale_fill_brewer(palette = "Dark2")
-figure2
+  scale_fill_brewer(palette = "Dark2")+
+  theme_bw()
+ggplotly(figure2)
 
 ```
 
