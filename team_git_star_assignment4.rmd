@@ -83,7 +83,7 @@ dat_tot <- dat1 %>%
 
 table1 <- dat_tot %>% 
   knitr::kable(caption = "Number of Incidents Recorded in different Police Region", align = 'c') %>% 
-  kable_styling(bootstrap_options = c("striped", "hover"))
+  kable_styling(bootstrap_options = c("striped", "hover","basic"))
 table1
 
 ```
@@ -97,15 +97,17 @@ The possible reason behind may be that the large decrease on the number of burgl
 
 Additionally, this report states that the number of deception cases is in a continuous increase, which may due to the convenience of technology of e-mail, mobile phones and the internet. Thus, it may highlight some areas for re-enforcement in the future, such as cyber security and private data privacy.
 
-```{r total, fig.cap = "Total number of incidents recorded in each police region", fig.height=8, fig.align='center',fig.width=12}
+```{r total,fig.cap = "Total number of incidents recorded in each police region", fig.height=8, fig.align='center',fig.width=10}
 dat_var <- dat1 %>% 
   filter(`Local.Government.Area` == "Total") %>% 
   group_by(Year, `Police.Region`) %>% 
   summarise(Total_Incidents = sum(`Incidents.Recorded`))
 
-figure1 <- ggplot(dat_var, aes(x= Year, y = Total_Incidents),
-       color = `Police.Region`)+
-  geom_line()+
+figure1 <- ggplot(dat_var, aes(x= Year,
+                               y = Total_Incidents,   
+                               color = `Police.Region`))+
+  geom_line() +
+  geom_point() +
   theme_bw()+
   facet_wrap(~ `Police.Region`, scales = "free",ncol=2)+
   scale_fill_brewer(palette = "Dark2")
@@ -147,8 +149,11 @@ trend <- dat_North %>%
                                       "Nillumbik",
                                       "Yarra"))
 
-figure2 <- ggplot(trend, aes(x= Year, y = Total_Incidents))+
+figure2 <- ggplot(trend, aes(x= Year, 
+                             y = Total_Incidents,
+                             color = "Local.Government.Area"))+
   geom_line()+
+  geom_point() +
   facet_wrap(~ `Local.Government.Area`, scales = "free",ncol=2)+
   scale_fill_brewer(palette = "Dark2")+
   theme_bw()
