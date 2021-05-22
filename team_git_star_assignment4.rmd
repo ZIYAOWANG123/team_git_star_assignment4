@@ -3,9 +3,9 @@ title: "team_git_star_assignment4"
 author: "ZIYAO WANG (Billy)", "Karan Garg", "Jiaying Zhang"
 date: "2021/5/15"
 output:
-  bookdown::html_document2
-keep_md: true  
-Subtitle: "Analysis report for criminal incidents in Victoria"
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
 
 ---
 
@@ -47,6 +47,7 @@ library(ggResidpanel)
 library(bookdown)
 library(plotly)
 library(here)
+library(flexdashboard)
 ```
 
 ```{r cleandata, include=FALSE}
