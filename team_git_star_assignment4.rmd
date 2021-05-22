@@ -1,6 +1,6 @@
 ---
 title: "team_git_star_assignment4"
-author: "ZIYAO WANG (Billy)"
+author: "ZIYAO WANG (Billy)", "Karan Garg", "Jiaying Zhang"
 date: "2021/5/15"
 output:
   bookdown::html_document2
