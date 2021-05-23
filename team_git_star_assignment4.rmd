@@ -230,30 +230,24 @@ The figure \@ref(fig:vis2)  shows
 
 
 
-## For each LGA,Which offence_subgroup was most recorded in the previous found offence_subdivision's?
+## Which offence_subgroup was most recorded in the previous found offence_subdivision's?
 ```{r datacleaning2, include=FALSE}
-criminaluse2 <- criminaldata %>% 
+criminaluse2 <- criminaldata %>%
   select(Year,
-         `Local Government Area`,
          `Offence Subgroup`,
          `Offence Subdivision`,
-         `Incidents Recorded`) %>% 
+         `Incidents Recorded`) %>%
   filter(`Offence Subdivision` == "B40 Theft")
 ```
-```{r vis3, fig.width=9,fig.height=12,fig.cap="Incidents in each Offence_subgroup of most recorded Offence_subdivision"}
-  criminalfinal3<- criminaluse2 %>% 
-     mutate(lgth = str_length(`Offence Subdivision`),
-            lgth1 = str_length(`Offence Subgroup`)) %>% 
-  mutate(`Offence Subdivision` = substr(`Offence Subdivision`,start = 5,stop = lgth),
-         `Offence Subgroup` = substr(`Offence Subgroup`,start = 5,stop = lgth1)) %>% 
-  group_by(`Local Government Area`, `Offence Subgroup`) %>% 
-    summarise(incidents = sum(`Incidents Recorded`)) %>% 
-ggplot(aes(y=reorder(`Local Government Area`,incidents),
-       x=incidents,
+```{r vis3, fig.width=9,fig.cap="Incidents in each Offence_subgroup of most recorded Offence_subdivision"}
+    criminalfinal3<- criminaluse2 %>%
+  group_by(Year, `Offence Subgroup`) %>%
+    summarise(incidents = sum(`Incidents Recorded`)) %>%
+ggplot(aes(Year,
+       incidents,
        fill = `Offence Subgroup` )) +
-  geom_col() +
-  xlab("Distribution of no. of incidents") +
-  ylab("Local Government Area")
+  geom_col()+
+   ggtitle("Incidents of each offence_subgroup in most recorded offence_subdivision")
  ggplotly(criminalfinal3)
 ```
 The figure \@ref(fig:vis3)  shows
