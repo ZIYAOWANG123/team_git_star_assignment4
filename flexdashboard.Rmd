@@ -134,7 +134,7 @@ criminaluse <- criminaldata %>%
          `Incidents Recorded`)
 ```
 
-Row {data-width=1000, data-height = 650}
+Row {data-width=500, data-height = 650}
 ---
 
 ### Chart 1
@@ -153,7 +153,8 @@ ggplot(aes(`Local Government Area`,
   theme(axis.text.x = element_blank()) 
  ggplotly(data)
 ```
-
+Row {data-width=500, data-height = 650}
+---
 ### Chart 2
 
 ```{r vis2, fig.width=10, fig.cap="Each offence_subdivision's incidents in each year"}
@@ -192,6 +193,8 @@ ggplot(aes(Year,
  ggplotly(criminalfinal3)
 ```
 
+Column {data-height=800, data-width = 1000}
+--------------------------------
 ### Chart 4
 
 ```{r datacleaning3, include=FALSE}
