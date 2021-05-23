@@ -1,0 +1,332 @@
+---
+title: "Analysis report for criminal incidents in Victoria"
+output: 
+  flexdashboard::flex_dashboard:
+        storyboard: true
+    #orientation: columns
+    #vertical_layout: fill
+    #orientation: rows
+        source_code: embed
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(readxl)
+library(haven)
+library(ggplot2)
+library(kableExtra)
+library(ggResidpanel)
+library(bookdown)
+library(plotly)
+library(here)
+library(dplyr)
+library(naniar)
+library(tidytext)
+```
+
+Introdustion {data-icon="fa-signal"}
+===================================== 
+
+Billy {data-icon="fa-signal"}
+===================================== 
+```{r cleandata, include=FALSE}
+dat <- read_excel("data/Data_Tables_LGA_Criminal_Incidents_Year_Ending_December_2020.xlsx", sheet=2)
+dat <- dat %>% 
+  select(c(Year, `Police Region`, `Local Government Area`, `Incidents Recorded`)) 
+```
+```{r readdata, include=FALSE}
+dat1 <- read.csv("data/LGA_Criminal_data2020.csv")
+```
+
+Column {data-width=650}
+---
+### Chart 1
+    
+```{r table1, message=FALSE}
+dat_tot <- dat1 %>% 
+  filter(`Local.Government.Area` == "Total") %>% 
+  group_by(`Police.Region`) %>% 
+  summarise(Total_Incidents = sum(`Incidents.Recorded`)) %>% 
+  arrange(-Total_Incidents)
+table1 <- dat_tot %>% 
+  knitr::kable(caption = "Number of Incidents Recorded in different Police Region", align = 'c') %>% 
+  kable_styling(bootstrap_options = c("striped", "hover","basic"))
+table1
+```
+---
+
+Some commentary about Frame 1.
+
+Column {data-width=1200}
+-------------------------------------
+   
+### Chart 2
+
+```{r total,fig.cap = "Total number of incidents recorded in each police region", fig.height=8, fig.align='center',fig.width=10}
+dat_var <- dat1 %>% 
+  filter(`Local.Government.Area` == "Total") %>% 
+  group_by(Year, `Police.Region`) %>% 
+  summarise(Total_Incidents = sum(`Incidents.Recorded`))
+figure1 <- ggplot(dat_var, aes(x= Year,
+                               y = Total_Incidents,   
+                               color = `Police.Region`))+
+  geom_line() +
+  geom_point() +
+  scale_x_continuous(breaks=seq(2011,2020,2)) +
+  theme_bw()+
+  facet_wrap(~ `Police.Region`, scales = "free",ncol=2)+
+  scale_fill_brewer(palette = "Dark2")
+ggplotly(figure1)
+```
+ 
+### Chart 3
+    
+```{r north, fig.cap = "Crimial activity trend in different suburbs from North West Metro", fig.align='center', fig.height=11,fig.width=10}
+dat_North <- dat1 %>% 
+  filter(Police.Region == "1 North West Metro") %>% 
+  select(-X)
+trend <- dat_North %>% 
+  group_by(Local.Government.Area, Year) %>% 
+  summarise(Total_Incidents = sum(`Incidents.Recorded`)) %>% 
+  arrange(-Total_Incidents) %>% 
+  filter(Local.Government.Area %in% c("Melbourne", 
+                                      "Hume", 
+                                      "Brimbank", 
+                                      "Wyndham", 
+                                      "Whittlesea", 
+                                      "Moreland",
+                                      "Banyule",
+                                      "Darebin",
+                                      "Hobsons Bay",
+                                      "Maribyrnong",
+                                      "Melton",
+                                      "Moonee Valley",
+                                      "Nillumbik",
+                                      "Yarra"))
+figure2 <- ggplot(trend, aes(x= Year, 
+                             y = Total_Incidents,
+                             color = "Local.Government.Area"))+
+  geom_line()+
+  geom_point() +
+  scale_x_continuous(breaks=seq(2011,2020,2)) +
+  facet_wrap(~ `Local.Government.Area`, scales = "free",ncol=2)+
+  scale_fill_brewer(palette = "Dark2")+
+  theme_bw()
+ggplotly(figure2)
+```
+Jiaying {data-icon="fa-signal"}
+===================================== 
+
+```{r read-data, include=FALSE}
+criminaldata <- read_excel("data/Data_Tables_LGA_Criminal_Incidents_Year_Ending_December_2020.xlsx", sheet = 4)
+```
+```{r datacleaning, include=FALSE}
+criminaluse <- criminaldata %>% 
+  select(Year,
+         `Local Government Area`,
+         `Offence Subdivision`,
+         `Incidents Recorded`)
+```
+
+Column {data-width=1200}
+---
+
+### Chart 1
+
+```{r vis1, fig.width=9, fig.cap="The offence_subdivision of maximum incidents in each LGA"}
+  criminalfinal<- criminaluse %>% 
+  group_by(`Local Government Area`, `Offence Subdivision` ) %>% 
+    summarise(incidents = sum(`Incidents Recorded`)) 
+data<- criminalfinal %>% arrange(desc(incidents)) %>%
+slice(1) %>% 
+ggplot(aes(`Local Government Area`,
+       incidents,
+       fill = `Offence Subdivision` )) +
+  geom_col()+
+   ggtitle("The offence_subdivision of maximum incidents in each LGA")+
+  theme(axis.text.x = element_blank()) 
+ ggplotly(data)
+```
+
+```{r vis2, fig.width=10, fig.cap="Each offence_subdivision's incidents in each year"}
+  criminalfinal2<- criminaluse %>% 
+  group_by(Year,`Offence Subdivision` ) %>% 
+    summarise(incidents = sum(`Incidents Recorded`)) %>% 
+ggplot(aes(Year,
+       incidents,
+       color = `Offence Subdivision` )) +
+  geom_line()+
+   ggtitle("Each offence_subdivision's incidents in each year")
+ ggplotly(criminalfinal2)
+```
+
+Column {data-width=1000}
+--------------------------------
+### Chart 2
+
+```{r datacleaning2, include=FALSE}
+criminaluse2 <- criminaldata %>% 
+  select(Year,
+         `Offence Subgroup`,
+         `Offence Subdivision`,
+         `Incidents Recorded`) %>% 
+  filter(`Offence Subdivision` == "B40 Theft")
+```
+```{r vis3, fig.width=10, fig.cap="Incidents of each offence_subgroup in most recorded offence_subdivision"}
+  criminalfinal3<- criminaluse2 %>% 
+  group_by(Year, `Offence Subgroup`) %>% 
+    summarise(incidents = sum(`Incidents Recorded`)) %>% 
+ggplot(aes(Year,
+       incidents,
+       fill = `Offence Subgroup` )) +
+  geom_col()+
+   ggtitle("Incidents of each offence_subgroup in most recorded offence_subdivision")
+ ggplotly(criminalfinal3)
+```
+
+### Chart 3
+
+```{r datacleaning3, include=FALSE}
+criminaluse3 <- criminaldata %>% 
+  select(Year,
+         `Offence Subgroup`,
+         `Incidents Recorded`)
+```
+```{r vis4, fig.width=10, fig.cap="Incidents of each offence_subgroup"}
+  criminalfinal4<- criminaluse3 %>% 
+  group_by(Year, `Offence Subgroup`) %>% 
+    summarise(incidents = sum(`Incidents Recorded`)) %>% 
+  arrange(desc(incidents)) %>% 
+  head(100) %>% 
+ggplot(aes(Year,
+       incidents,
+       color = `Offence Subgroup` )) +
+  geom_line()+
+   ggtitle("Incidents of each offence_subgroup")
+ ggplotly(criminalfinal4)
+```
+
+Karan{data-icon="fa-signal"}
+===================================== 
+```{r read-file,include=FALSE}
+data3 <- read_excel(here::here("data/Data_Tables_LGA_Criminal_Incidents_Year_Ending_December_2020.xlsx"),sheet = 4)
+```
+
+```{r clean,include=FALSE}
+miss_var_summary(data3)
+data3 <- data3 %>% 
+  rename(Month = `Year ending`,
+         LGA = `Local Government Area`,
+         Suburb = `Suburb/Town Name`,
+         Offence_Division = `Offence Division`,
+         Offence_Subdivision = `Offence Subdivision`,
+         Offence_Subgroup = `Offence Subgroup`,
+         Incidents_Recorded = `Incidents Recorded`)
+```
+
+Column {data-width=1200}
+---
+
+### Chart 1
+
+```{r Q1-table,echo=FALSE}
+data3 %>% 
+  group_by(Suburb) %>%
+  summarise(Total_Incidents = sum(Incidents_Recorded)) %>% 
+  slice_max(Total_Incidents,n = 10) %>% 
+  kable(caption = "Suburbs with maximum incidents over the years") %>% 
+  kable_styling(bootstrap_options = c("striped","hover","basic"))
+```
+Column {data-width=350}
+--------------------------------
+### Chart 2
+
+```{r Q1,echo=FALSE,fig.width=8,fig.height=15,fig.cap="Top 10 Suburb with most incidents recorded"}
+data3 %>% 
+  group_by(Year,Suburb) %>%
+  summarise(Total_Incidents = sum(Incidents_Recorded)) %>% 
+  arrange(Year,desc(Total_Incidents)) %>% 
+  slice_max(Total_Incidents,n = 10) %>% 
+  mutate(Suburb1 = reorder_within(Suburb,Total_Incidents,Year)) %>% 
+  ggplot(aes(x=Total_Incidents ,
+             y=Suburb1,
+             fill = Suburb)) +
+  geom_col() +
+  geom_text(aes(label = Total_Incidents)) +
+  scale_y_reordered() +
+  ylab("Suburb") +
+  xlab("No. of Incidents") +
+  ggtitle("Top 10 Suburb with most incidents recorded in each Years") +
+  facet_wrap(~Year,ncol = 1, scales = "free")
+```
+
+### Chart 3
+
+```{r Q2,echo=FALSE,fig.width=12,fig.height=15,fig.cap="Top 10 Offences recorded"}
+data3 %>%
+  mutate(lgth = str_length(Offence_Subdivision)) %>% 
+  mutate(Offence_Subdivision = substr(Offence_Subdivision,start = 5,stop = lgth)) %>% 
+  mutate(Offence_Subdivision = str_replace(Offence_Subdivision,"r crimes against the person","Other crimes against the person")) %>% 
+  group_by(Year,Offence_Subdivision) %>% 
+  summarise(Tot_incidents = sum(Incidents_Recorded)) %>% 
+  arrange(Year,desc(Tot_incidents)) %>%
+  slice_max(Tot_incidents,n = 10) %>% 
+  mutate(Offence1 = reorder_within(Offence_Subdivision,Tot_incidents,Year)) %>% 
+    ggplot(aes(y= Offence1,
+         x= Tot_incidents,
+         fill = Offence_Subdivision)) +
+  geom_col() +
+  geom_text(aes(label = Tot_incidents)) +
+  scale_y_reordered() +
+  ylab("Type of Offece") +
+  xlab("No of Incidents") +
+  facet_wrap(~Year,ncol = 1,scales = "free")
+```
+### Chart 4
+```{r Q3,echo=FALSE,fig.width=10,fig.height=4,fig.cap="Top 10 Offfences Suburrb wise"}
+Suburb_imp <- data3 %>% 
+  group_by(Year,Suburb) %>%
+  summarise(Total_Incidents = sum(Incidents_Recorded)) %>% 
+  arrange(Year,desc(Total_Incidents)) %>% 
+  slice_max(Total_Incidents,n = 10) 
+Q3graph <- data3 %>% 
+  mutate(lgth = str_length(Offence_Subdivision)) %>% 
+  mutate(Offence_Subdivision = substr(Offence_Subdivision,start = 5,stop = lgth)) %>% 
+  mutate(Offence_Subdivision = str_replace(Offence_Subdivision,"r crimes against the person","Other crimes against the person")) %>% 
+  filter(Suburb %in% unique(Suburb_imp$Suburb)) %>% 
+  group_by(Suburb,Offence_Subdivision) %>% 
+  summarise(Tot_incidents = sum(Incidents_Recorded)) %>% 
+  slice_max(Tot_incidents,n = 2) %>% 
+  arrange(-Tot_incidents) %>% 
+  #mutate(offence1 = reorder_within(Offence_Subdivision,Tot_incidents,Suburb)) %>% 
+  ggplot(aes(y= Suburb,
+             x =Tot_incidents,
+             fill = Offence_Subdivision)) +
+  geom_col() 
+  ggplotly(Q3graph)
+```
+### Chart 5
+```{r Q4,echo=FALSE,fig.width=10,fig.height=10,Fg.cap="Trend of Top 2 Offences in each year w.r.t Suburb" }
+Q4graoh <- data3 %>% 
+  mutate(lgth = str_length(Offence_Subdivision)) %>% 
+  mutate(Offence_Subdivision = substr(Offence_Subdivision,start = 5,stop = lgth)) %>% 
+  mutate(Offence_Subdivision = str_replace(Offence_Subdivision,"r crimes against the person","Other crimes against the person")) %>% 
+  filter(Suburb %in% unique(Suburb_imp$Suburb)) %>% 
+  group_by(Year,Suburb,Offence_Subdivision) %>% 
+  summarise(Tot_incidents = sum(Incidents_Recorded)) %>% 
+  slice_max(Tot_incidents,n = 2) %>% 
+  ggplot(aes(x= as.numeric(Year),
+             y =Tot_incidents,
+             color = Offence_Subdivision)) +
+  geom_line() +
+  geom_point() +
+  scale_x_continuous(breaks=seq(2011,2020,2)) +
+  xlab("Year") +
+  ylab("Total_incidents") +
+  facet_wrap(~Suburb)
+ggplotly(Q4graoh)
+```
+
+Conclusion {data-icon="fa-table"}
+=====================================     
