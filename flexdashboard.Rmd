@@ -139,17 +139,22 @@ Row {data-width=500, data-height = 650}
 
 ### Chart 1
 
-```{r vis1, fig.width=9, fig.cap="The offence_subdivision of maximum incidents in each LGA"}
+```{r vis1, fig.width=9,fig.height=12,fig.cap="No .of Imcidents of top offennce in each LGA"}
   criminalfinal<- criminaluse %>% 
+    mutate(lgth = str_length(`Offence Subdivision`)) %>% 
+  mutate(`Offence Subdivision` = substr(`Offence Subdivision`,start = 5,stop = lgth)) %>% 
+  mutate(`Offence Subdivision` = str_replace(`Offence Subdivision`,"r crimes against the person","Other crimes against the person")) %>% 
   group_by(`Local Government Area`, `Offence Subdivision` ) %>% 
     summarise(incidents = sum(`Incidents Recorded`)) 
 data<- criminalfinal %>% arrange(desc(incidents)) %>%
 slice(1) %>% 
-ggplot(aes(`Local Government Area`,
-       incidents,
-       fill = `Offence Subdivision` )) +
+ggplot(aes(y=reorder(`Local Government Area`,incidents),
+       x=incidents,
+       fill = `Offence Subdivision`)) +
   geom_col()+
-   ggtitle("The offence_subdivision of maximum incidents in each LGA")+
+  geom_text(aes(label = incidents)) +
+  xlab("No. of Incidents") +
+  ylab("Local Government Area") +
   theme(axis.text.x = element_blank()) 
  ggplotly(data)
 ```
@@ -157,16 +162,25 @@ Row {data-width=500, data-height = 650}
 ---
 ### Chart 2
 
-```{r vis2, fig.width=10, fig.cap="Each offence_subdivision's incidents in each year"}
+```{r vis2, fig.width=10, fig.cap="Trend of each Offence_subdivision from year 2011-2020"}
   criminalfinal2<- criminaluse %>% 
-  group_by(Year,`Offence Subdivision` ) %>% 
+   mutate(lgth = str_length(`Offence Subdivision`)) %>% 
+  mutate(`Offence Subdivision` = substr(`Offence Subdivision`,start = 5,stop = lgth)) %>% 
+  mutate(`Offence Subdivision` = str_replace(`Offence Subdivision`,"r crimes against the person","Other crimes against the person")) %>% 
+  group_by(Year,
+           `Offence Subdivision` ) %>% 
     summarise(incidents = sum(`Incidents Recorded`)) %>% 
-ggplot(aes(Year,
-       incidents,
+ggplot(aes(x=as.numeric(Year),
+       y=incidents,
        color = `Offence Subdivision` )) +
   geom_line()+
-   ggtitle("Each offence_subdivision's incidents in each year")
- ggplotly(criminalfinal2)
+  geom_point() +
+  scale_x_continuous() +
+  ylab("No. of Incidents") +
+  scale_x_continuous(breaks=seq(2011,2020,2)) +
+  xlab("Year") 
+ ggplotly(criminalfinal2) %>% 
+   hide_legend()
 ```
 
 Column {data-height=800, data-width = 1000}
@@ -203,18 +217,23 @@ criminaluse3 <- criminaldata %>%
          `Offence Subgroup`,
          `Incidents Recorded`)
 ```
-```{r vis4, fig.width=10, fig.cap="Incidents of each offence_subgroup"}
+```{r vis4, fig.width=10, fig.cap="Trend ofIncidents of each offence_subgroup"}
   criminalfinal4<- criminaluse3 %>% 
+  mutate(lgth = str_length(`Offence Subgroup`)) %>% 
+  mutate(`Offence Subgroup` = substr(`Offence Subgroup`,start = 5,stop = lgth)) %>% 
+  mutate(`Offence Subgroup` = str_replace(`Offence Subgroup`,"r crimes against the person","Other crimes against the person")) %>% 
   group_by(Year, `Offence Subgroup`) %>% 
     summarise(incidents = sum(`Incidents Recorded`)) %>% 
-  arrange(desc(incidents)) %>% 
-  head(100) %>% 
-ggplot(aes(Year,
+  arrange(`Offence Subgroup`,desc(incidents)) %>% 
+    ggplot(aes(Year,
        incidents,
-       color = `Offence Subgroup` )) +
+       color = `Offence Subgroup`)) +
   geom_line()+
-   ggtitle("Incidents of each offence_subgroup")
- ggplotly(criminalfinal4)
+  scale_x_continuous(breaks=seq(2011,2020,2))+
+  geom_point() +
+  ylab("No. of Imcidents")
+ ggplotly(criminalfinal4) %>% 
+   hide_legend()
 ```
 
 Karan{data-icon="fa-gitlab"}
