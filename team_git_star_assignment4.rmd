@@ -8,6 +8,8 @@ output:
               css: monashreport.css
               includes:
                before_body: header.html
+               toc: true
+               toc_float: true
   bookdown::pdf_document2: default
 keep_md: true    
 ---
@@ -152,7 +154,7 @@ trend <- dat_North %>%
 
 figure2 <- ggplot(trend, aes(x= Year, 
                              y = Total_Incidents,
-                             color = "Local.Government.Area"))+
+                             color = Local.Government.Area))+
   geom_line()+
   geom_point() +
   scale_x_continuous(breaks=seq(2011,2020,2)) +
@@ -323,7 +325,9 @@ data3 <- data3 %>%
          Incidents_Recorded = `Incidents Recorded`)
 ```
 
-#W What are the top 10 Suburbs wth maximum no of incidents so far?
+# Section 3 
+
+## What are the top 10 Suburbs wth maximum no of incidents so far?
 
 ```{r Q1-table,echo=FALSE}
 data3 %>% 
@@ -423,7 +427,7 @@ The Figure \@ref(fig:Q3) is clearly in coordination with figure \@ref(fig:Q2) as
 
 ## What is the trend of top 2 offences in each year w.r.t most affected Suburb?
 
-```{r Q4,echo=FALSE,fig.width=10,fig.height=10,Fg.cap="Trend of Top 2 Offences in each year w.r.t Suburb" }
+```{r Q4,echo=FALSE,fig.width=10,fig.height=10,fig.cap="Trend of Top 2 Offences in each year w.r.t Suburb" }
 Q4graoh <- data3 %>% 
   mutate(lgth = str_length(Offence_Subdivision)) %>% 
   mutate(Offence_Subdivision = substr(Offence_Subdivision,start = 5,stop = lgth)) %>% 
