@@ -22,13 +22,16 @@ library(here)
 library(dplyr)
 library(naniar)
 library(tidytext)
+library(knitr)
 ```
 
 Introduction {data-icon="fa-address-book"}
 ===================================== 
 
-Row {data-width = 600}
------
+```{r , fig.align ="center"}
+include_graphics("police.jpeg") 
+```
+
 ### Data Description
 
 Billy {data-icon="fa-github"}
@@ -133,6 +136,8 @@ criminaluse <- criminaldata %>%
          `Offence Subdivision`,
          `Incidents Recorded`)
 ```
+- 1 
+
 
 Row {data-width=500, data-height = 650}
 ---
@@ -313,7 +318,7 @@ data3 %>%
   facet_wrap(~Year,ncol = 1,scales = "free")
 ```
 
-Column {data-height=750}
+Column {data-height=800, data-width = 1000}
 -------------------------------------
 
 ### Chart 4
@@ -339,7 +344,9 @@ Q3graph <- data3 %>%
   geom_col() 
   ggplotly(Q3graph)
 ```
-### Chart 5
+Column {data-height=800, data-width = 1000}
+-------------------------------------
+### Chart 5 
 ```{r Q4,echo=FALSE,fig.width=10,fig.height=10,Fg.cap="Trend of Top 2 Offences in each year w.r.t Suburb" }
 Q4graoh <- data3 %>% 
   mutate(lgth = str_length(Offence_Subdivision)) %>% 
@@ -363,3 +370,4 @@ ggplotly(Q4graoh)
 
 Conclusion {data-icon="fa-table"}
 =====================================     
+- bullet
