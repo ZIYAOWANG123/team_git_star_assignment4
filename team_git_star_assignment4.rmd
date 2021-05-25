@@ -200,7 +200,12 @@ ggplot(aes(y=reorder(`Local Government Area`,incidents),
   theme(axis.text.x = element_blank()) 
  ggplotly(data)
 ```
-The figure \@ref(fig:vis1)  shows, theft was the most common crime in each region, with Melbourne in particular recording some 90,900 burglaries in the past five years.
+The figure \@ref(fig:vis1)  shows:
+
+- Theft was the most common crime in each region.
+
+- Melbourne in particular recording round 90,900 burglaries in the past five years,far more than any other region.
+
 ```{r vis2, fig.width=10, fig.cap="Trend of each Offence_subdivision from year 2011-2020"}
   criminalfinal2<- criminaluse %>% 
    mutate(lgth = str_length(`Offence Subdivision`)) %>% 
@@ -230,7 +235,7 @@ The figure \@ref(fig:vis2)  shows
 
 
 
-## Which offence_subgroup was most recorded in the previous found offence_subdivision's?
+## Which offence_subgroup was most recorded in the previous found offence_subdivision’s?
 ```{r datacleaning2, include=FALSE}
 criminaluse2 <- criminaldata %>%
   select(Year,
@@ -246,11 +251,13 @@ criminaluse2 <- criminaldata %>%
 ggplot(aes(Year,
        incidents,
        fill = `Offence Subgroup` )) +
-  geom_col()+
-   ggtitle("Incidents of each offence_subgroup in most recorded offence_subdivision")
+  geom_col(position="dodge")+
+   ggtitle("Percentage of each offence_subgroup in the previous found offence_subdivision's")
  ggplotly(criminalfinal3)
 ```
-The figure \@ref(fig:vis3)  shows
+
+
+The figure \@ref(fig:vis3) shows
 
 - Among thefts, steal from a motor vehicle has the largest number during the last five years. In 2016, about 63,000 steal from a motor vehicle occurred, but the number of thefts has decreased in the past two years.
 
@@ -258,7 +265,7 @@ The figure \@ref(fig:vis3)  shows
 
 
 
-##  What was the trend of each offence_subgroup found over the years?
+##  What was the trend of each offence_subgroup over the years?
 ```{r datacleaning3, include=FALSE}
 criminaluse3 <- criminaldata %>% 
   select(Year,
