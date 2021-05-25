@@ -68,7 +68,7 @@ Row
 
 |Name	          |Email Id	                  |Student Id|
 |---------------|:-------------------------:|----------|
-|Karan Grag     |kgar0017@student.monash.edu|  |
+|Karan Garg     |kgar0017@student.monash.edu|32106580  |
 |Jiaying Zhang  |jzha0342@student.monash.edu|30930685  |
 |Ziyao Wang     |zwan0008@student.monash.edu|27925315  |
 
