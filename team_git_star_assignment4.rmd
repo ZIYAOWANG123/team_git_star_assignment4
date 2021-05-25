@@ -261,7 +261,7 @@ The figure \@ref(fig:vis3) shows
 
 - Among thefts, steal from a motor vehicle has the largest number during the last five years. In 2016, about 63,000 steal from a motor vehicle occurred, but the number of thefts has decreased in the past two years.
 
-- Other Theft is second(around40000), and other offence_subgroup make up only a small fraction.
+- Other Theft is second (around40000), and other offence_subgroup make up only a small fraction.
 
 
 
@@ -297,6 +297,8 @@ The figure \@ref(fig:vis4)  shows
 - Steal from a motor vehicle in the category of theft has been in the first place in the past five years, with about 50,000 cases occurring every year, far exceeding other offence_subgroups.
 
 - Other Theft is in second place (about 39,000 per year) and Criminal Damage is third (about 35,000 per year). However, the gap between these two types of crimes and steal from a notor vehicle has gradually widened since 2013.
+
+- Since 2019,public health and safety cases have risen sharply, with almost no cases in 2019 but rising to about 37,000 in 2020.
 
 ## Conclusion:
 
