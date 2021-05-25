@@ -317,6 +317,19 @@ Row {data-height=800, data-width = 1000}
 
 - Since 2019,**public health and safety** cases have **risen** sharply, with almost no cases in 2019 but reached about 37,000 in **2020**.
 
+Column {data-height=800, data-width = 1000}
+--------------------------------
+### Conclusion:
+
+-- In part two, the report show that 
+
+- In every LGA, **theft** occurs most frequently in offence_subdivisions and the incidence of thefts is far greater than other types of offence_subdivision.
+
+- In the theft offence_subdivision, the vast majority are **steal from a motor vehicle** and **other theft**. 
+
+- Because the proportion of theft cases is too large, steal from a motor vehicle and other Theft also the top two in all offence_subgroup. 
+
+- Overall, most of offence_subgroups's number of incidents were up in **2016**, but have declined in the last two years.
 
 
 Section 3 {data-icon="fa-gitlab"}
@@ -476,19 +489,6 @@ Conclusion & References {data-icon="fa-table"}
 =====================================     
 
 
-Column {data-height=800, data-width = 1000}
---------------------------------
-### Conclusion:
-
--- In part two, the report show that 
-
-- In every LGA, **theft** occurs most frequently in offence_subdivisions and the incidence of thefts is far greater than other types of offence_subdivision.
-
-- In the theft offence_subdivision, the vast majority are **steal from a motor vehicle** and **other theft**. 
-
-- Because the proportion of theft cases is too large, steal from a motor vehicle and other Theft also the top two in all offence_subgroup. 
-
-- Overall, most of offence_subgroups's number of incidents were up in **2016**, but have declined in the last two years.
 
 
 
