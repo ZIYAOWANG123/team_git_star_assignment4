@@ -191,8 +191,13 @@ Section 2 {data-icon="fa-github-alt"}
 ### The definition of some concepts to be used
 
 ```{r , fig.align ="center"}
-include_graphics("type.png") 
+defin<-data.frame(grade=c("Broadest level","Intermediate level","Finest level"), 
+                            Area=c("Region","Police Service Area", "Local Government Areas"),                            Crime=c("Divisions","Subdivisions","Groups"))%>%
+knitr::kable(caption="Definition for some concept",booktabs = TRUE) %>%
+kable_styling(bootstrap_options = c("striped", "hover"))
+defin
 ```
+
 
 
 ```{r read-data, include=FALSE}
