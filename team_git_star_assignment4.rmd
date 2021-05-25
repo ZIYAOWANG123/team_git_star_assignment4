@@ -115,7 +115,7 @@ Since it is the most incidents recorded region, constructing a figure \@ref(fig:
 
 The figures suggest that there is a tendency that the number of incidents recorded is increasing since 2019. This can provide some suggestions to the government in terms of adjusting the public safety policy and assigning the police resources. 
 
-Yet, few exceptions such as Hobsons Bay, Moonee Valley and Banyule, the reason maybe they are not the major resident area hance fewer criminal activities occurrence.
+Yet, few exceptions such as Hobsons Bay, Moonee Valley and Banyule, the reason maybe they are not the major resident area hence fewer criminal activities occurrence.
 
 
 ```{r north, fig.cap = "Crimial activity trend in different suburbs from North West Metro", fig.align='center', fig.height=11,fig.width=10}
