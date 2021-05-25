@@ -29,13 +29,13 @@ Section 1 - Table 1
 
 Section 2
 
-- [ ]  For each LGA , which offence_subdivision, recorded maximum incidents
-- [ ] For each LGA,Which offence_subgroup was most recorded in the previous found offence_subdivision's?
+- [ ] For each LGA , which offence_subdivision, recorded maximum incidents
+- [ ] Which offence_subgroup was most recorded in the previous found offence_subdivision's?
 - [ ] What was the trend of each offence_subgroup found over the years?
 
 Section 3
 
-- [ ]  For each Suburb/Town, which offence_subdivision, recorded maximum incidents
+- [ ] For each Suburb/Town, which offence_subdivision, recorded maximum incidents
 - [ ] For each Suburb/Town,Which offence_subgroup was most recorded in the previous found offence_subdivision's?
 
 ```{r setup, include=FALSE}
