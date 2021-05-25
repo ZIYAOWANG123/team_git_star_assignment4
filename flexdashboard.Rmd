@@ -34,6 +34,19 @@ include_graphics("police.jpeg")
 
 ### Data Description
 
+The [data](https://www.crimestatistics.vic.gov.au/crime-statistics/latest-victorian-crime-data/download-data-0) used for the analysis records the criminal incidents in Victoria from 2010 December to 2020 December.  It is collected from the [Crime Statistics Agency](https://www.crimestatistics.vic.gov.au/about-us/contact-us) of Victoria Government. The copyright is under the [CC-BY 4.0 license](https://creativecommons.org/licenses/by/4.0/), which allows the team to apply the data analysis with minimum restrictions on the use of the data.
+
+The **purpose of this analysis report** is to assist the policy maker to adjust or re-assign the police resources, possibly providing some insights on the future development on the social security.
+
+In the data analysis, it contains three main parts:
+
+- 1 To obtain an overview of the criminal incidents among Victoria's police regions. Also, observing the changes of incidents recorded over time to seek some trend or pattern in different local goverment areas.
+
+- 2 To understand the criminal activity better, it will not only show the record changes over time but also the changes of offence sub-groups and sub-divisions. This will provide a precise landscape of criminal activities in Victoria.
+
+- 3 Building on the previous analysis, this part will explore the dissect the criminal activities among different suburbs or towns in Victoria.
+
+
 Billy {data-icon="fa-github"}
 ===================================== 
 ```{r cleandata, include=FALSE}
@@ -45,9 +58,9 @@ dat <- dat %>%
 dat1 <- read.csv("data/LGA_Criminal_data2020.csv")
 ```
 
-Row {data-width=600}
+Row {data-width=1000}
 ------
-### Table 1 - Total Incidents recorded for each police region
+### Table 1 - To observe the total number of incidents recorded for each police region
     
 ```{r table1, message=FALSE}
 dat_tot <- dat1 %>% 
@@ -62,12 +75,12 @@ table1
 ```
 ---
 
-Some commentary about Frame 1.
+- **North West Metro** police region has recorded maximum incidents during the period.
 
 Row {data-width=1000}
 -------------------------------------
    
-### Chart 2 - 
+### Chart 2 - Incidents reocrded by different police region over time.
 
 ```{r total,fig.cap = "Total number of incidents recorded in each police region", fig.height=8, fig.align='center',fig.width=10}
 dat_var <- dat1 %>% 
@@ -85,8 +98,11 @@ figure1 <- ggplot(dat_var, aes(x= Year,
   scale_fill_brewer(palette = "Dark2")
 ggplotly(figure1)
 ```
- 
-### Chart 3 - 
+
+---
+- In the four main police regions of Victoria, it illustrates an evident fact that the number of incidents recorded has reached the *peak around early 2016*, then has a sudden pungle afterward.
+
+### Chart 3 - Crimial activity in North West Metro area.
     
 ```{r north, fig.cap = "Crimial activity trend in different suburbs from North West Metro", fig.align='center', fig.height=11,fig.width=10}
 dat_North <- dat1 %>% 
@@ -144,7 +160,7 @@ Row {data-width=500, data-height = 650}
 
 ### Chart 1
 
-```{r vis1, fig.width=9,fig.height=12,fig.cap="No .of Imcidents of top offennce in each LGA"}
+```{r vis1, fig.width=9,fig.height=12,fig.cap="No .of incidents of top offennce in each LGA"}
   criminalfinal<- criminaluse %>% 
     mutate(lgth = str_length(`Offence Subdivision`)) %>% 
   mutate(`Offence Subdivision` = substr(`Offence Subdivision`,start = 5,stop = lgth)) %>% 
@@ -222,7 +238,7 @@ criminaluse3 <- criminaldata %>%
          `Offence Subgroup`,
          `Incidents Recorded`)
 ```
-```{r vis4, fig.width=10, fig.cap="Trend ofIncidents of each offence_subgroup"}
+```{r vis4, fig.width=10, fig.cap="Trend of incidents of each offence_subgroup"}
   criminalfinal4<- criminaluse3 %>% 
   mutate(lgth = str_length(`Offence Subgroup`)) %>% 
   mutate(`Offence Subgroup` = substr(`Offence Subgroup`,start = 5,stop = lgth)) %>% 
