@@ -103,9 +103,11 @@ table1 <- dat_tot %>%
   kable_styling(bootstrap_options = c("striped", "hover","basic"))
 table1
 ```
----
 
-- **North West Metro** police region has recorded maximum incidents during the period.
+
+**Observations**
+
+**North West Metro** police region has recorded maximum incidents during the period.
 
 Row {.tabset data-width=1000}
 -------------------------------------
@@ -129,11 +131,9 @@ figure1 <- ggplot(dat_var, aes(x= Year,
 ggplotly(figure1)
 ```
 
----
-- In the four main police regions of Victoria, it illustrates an evident fact that the number of incidents recorded has reached the *peak around early 2016*, then has a sudden pungle afterward.
 
 ### Chart 3 - Crimial activity in North West Metro area.
-    
+
 ```{r north, fig.cap = "Crimial activity trend in different suburbs from North West Metro", fig.align='center', fig.height=11,fig.width=10}
 dat_North <- dat1 %>% 
   filter(Police.Region == "1 North West Metro") %>% 
@@ -168,6 +168,22 @@ figure2 <- ggplot(trend, aes(x= Year,
 ggplotly(figure2)
 ```
 
+Row {data.width = 600}
+--------------------------------
+
+**Observations  from Chart 2**
+
+- In the four main police regions of Victoria, it illustrates an evident fact that the number of incidents recorded has reached the *peak around early 2016*, then has a sudden pungle afterward.
+
+- The possible reason behind may be that the large decrease on the number of burglary and theft from 2016 to 2017, according to the report from [Victoria crime statistics](https://www.crimestatistics.vic.gov.au/crime-statistics/latest-victorian-crime-data/victim-reports-2).
+
+  * Additionally, this report states that the number of deception cases is in a continuous increase, which may due to the convenience of technology of e-mail, mobile phones and the internet. Thus, it may highlight some areas for re-enforcement in the future, such as cyber security and private data privacy.
+
+**Observations from Chart 3**
+
+- A tendency that the number of incidents recorded is increasing **since 2019**. This can provide some suggestions to the government in terms of adjusting the public safety policy and assigning the police resources. 
+
+ - Yet, **few exceptions** such as Hobsons Bay, Moonee Valley and Banyule, the reason maybe they are not the major resident area hence fewer criminal activities occurrence.
 
 Section 2 {data-icon="fa-github-alt"}
 ===================================== 
@@ -479,15 +495,14 @@ ggplotly(Q4graoh)
 ```
 Row {data-width = 1000}
 --------------------------------
-*  Crime rate of the 2 most occured offences im the affected Suburbs were pretty much steafy along the years.
+*  Crime rate of the 2 most occurred offences in the affected Suburbs were pretty much steafy along the years.
 *  Im **Melbourne**.
    *  **Disorderly and offensive conduct** crime went off radar after 2014.
    *  **Breachers of order** were only seen from years 2015-2019.
    *  **Miscellaneous offence** came into action in year 2020.
 
-Conclusion & References {data-icon="fa-table"}
+References {data-icon="fa-table"}
 =====================================     
-
 
 
 
@@ -528,7 +543,7 @@ Conclusion & References {data-icon="fa-table"}
 
 ***
 
-<b><font face="Georgia" size="10em" color="#8feb34">Thank You!</font></b> 
+<b><font face="Georgia" size="10em" color="#8feb34"><center>Thank You!</center></font></b> 
 
 
 
