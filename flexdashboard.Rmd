@@ -348,7 +348,7 @@ Column {data-height=800, data-width = 1000}
 - Overall, most of offence_subgroups's number of incidents were up in **2016**, but have declined in the last two years.
 
 
-Section 3 {data-icon="fa-gitlab"}
+Suburb Analysis {data-icon="fa-gitlab"}
 ===================================== 
 ```{r read-file,include=FALSE}
 data3 <- read_excel(here::here("data/Data_Tables_LGA_Criminal_Incidents_Year_Ending_December_2020.xlsx"),sheet = 4)
@@ -369,7 +369,7 @@ data3 <- data3 %>%
 Row {data-width=650}
 ---
 
-### Table
+### Suburbs with maximum incidents over the years
 
 ```{r Q1-table,echo=FALSE}
 data3 %>% 
@@ -380,11 +380,12 @@ data3 %>%
   kable_styling(bootstrap_options = c("striped","hover","basic"))
 ```
 * **Melbourne** had maximum no of incidents with more than 1.5 lakh over the years 
-* Other suburbs were 60K incidents in total. 
+* Other suburbs had at max. 60K incidents in total. 
 
-Row {data-width=1000}
----
-### Chart 1
+Row {.tabset data-width=1000}
+-------------------------------------
+
+### Top 10 Suburb with most incidents recorded in each Years"
 
 ```{r Q1,echo=FALSE,fig.width=8,fig.height=15,fig.cap="Top 10 Suburb with most incidents recorded"}
 data3 %>% 
@@ -405,16 +406,8 @@ data3 %>%
   facet_wrap(~Year,ncol = 1, scales = "free")
 ```
 
-Row {data-height=200, data-width = 1000}
---------------------------------
-*  **Melbourne** not only had overall maximum incidents, but also had the maxiimum crime in each year.
-*  It had least no of crimes in year **2015**.
-*  Suprisiingly, **Melbourne** saw a massive fall of 10K in crime no. from 2019-2020, mqybe due to lockdown restrictions imposed  during COVID-19.
 
-
-Row {data-width=1000}
---------------------------------
-### Chart 2
+### Top 10 Offences recorded in each Year
 
 ```{r Q2,echo=FALSE,fig.width=12,fig.height=15,fig.cap="Top 10 Offences recorded"}
 data3 %>%
@@ -434,18 +427,24 @@ data3 %>%
   scale_y_reordered() +
   ylab("Type of Offece") +
   xlab("No of Incidents") +
+  ggtitle("Top 10 Offences recorded in each Year")
   facet_wrap(~Year,ncol = 1,scales = "free")
 ```
-Row {data-height=800, data-width = 1000}
+
+Column {data-height=200, data-width = 200}
 --------------------------------
+*  **Melbourne** not only had overall maximum incidents, but also had the maxiimum crime in each year.
+*  It had least no of crimes in year **2015**.
+*  Suprisiingly, **Melbourne** saw a massive fall of 10K in crime no. from 2019-2020, maybe due to lockdown restrictions imposed  during COVID-19.
+
 * **Theft** was the most occurred crime across all the years.
 * **Burglary/Break and enter** type of offence decreased over the years.
 
 Row {data-width=1000}
 --------------------------------
 
-### Chart 3
-```{r Q3,echo=FALSE,fig.width=10,fig.height=4,fig.cap="Top 10 Offfences Suburrb wise"}
+### Top 2 Offfences in each Suburb
+```{r Q3,echo=FALSE,fig.width=10,fig.height=4,fig.cap="Top 2 Offfences Suburb wise"}
 Suburb_imp <- data3 %>% 
   group_by(Year,Suburb) %>%
   summarise(Total_Incidents = sum(Incidents_Recorded)) %>% 
@@ -460,19 +459,21 @@ Q3graph <- data3 %>%
   summarise(Tot_incidents = sum(Incidents_Recorded)) %>% 
   slice_max(Tot_incidents,n = 2) %>% 
   arrange(-Tot_incidents) %>% 
-  #mutate(offence1 = reorder_within(Offence_Subdivision,Tot_incidents,Suburb)) %>% 
-  ggplot(aes(y= Suburb,
+  ggplot(aes(y= reorder(Suburb,Tot_incidents),
              x =Tot_incidents,
              fill = Offence_Subdivision)) +
-  geom_col() 
-  ggplotly(Q3graph)
+  geom_col() +
+  xlab("Total Incidents") +
+  ylab("Suburbs") +
+  ggtitle("Top 2 Offfences in each Suburb")
+ggplotly(Q3graph)
 ```
 
 * **Theft** is most occurred crime across the affected Suburbs too
 
 Row {data-width=1000}
 --------------------------------
-### Chart 4
+### Trend of Top 2 Offences in each year w.r.t Suburb
 ```{r Q4,echo=FALSE,fig.width=10,fig.height=10,Fg.cap="Trend of Top 2 Offences in each year w.r.t Suburb" }
 Q4graoh <- data3 %>% 
   mutate(lgth = str_length(Offence_Subdivision)) %>% 
@@ -490,6 +491,7 @@ Q4graoh <- data3 %>%
   scale_x_continuous(breaks=seq(2011,2020,2)) +
   xlab("Year") +
   ylab("Total_incidents") +
+  ggtitle("Trend of Top 2 Offences in each year w.r.t Suburb") +
   facet_wrap(~Suburb)
 ggplotly(Q4graoh)
 ```
