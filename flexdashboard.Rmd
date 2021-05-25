@@ -33,23 +33,8 @@ include_graphics("police.jpeg")
 ```
 
 Row
------
-
-***
-
-**TEAM MEMBERS**
-
-|Name	          |Email Id	                  |Student Id|
-|---------------|:-------------------------:|----------|
-|Karan Grag     |@student.monash.edu|  |
-|Jiaying Zhang  |@student.monash.edu|  |
-|Ziyao Wang     |zwan0008@student.monash.edu|27925315  |
-
- 
-***
-Row
 ----
-### Data Description
+### **Data Description**
 
 The [data](https://www.crimestatistics.vic.gov.au/crime-statistics/latest-victorian-crime-data/download-data-0) used for the analysis records the criminal incidents in Victoria from 2010 December to 2020 December.  It is collected from the [Crime Statistics Agency](https://www.crimestatistics.vic.gov.au/about-us/contact-us) of Victoria Government. The copyright is under the [CC-BY 4.0 license](https://creativecommons.org/licenses/by/4.0/), which allows the team to apply the data analysis with minimum restrictions on the use of the data.
 
@@ -59,9 +44,37 @@ In the data analysis, it contains three main parts:
 
 - 1 To obtain an overview of the criminal incidents among Victoria's police regions. Also, observing the changes of incidents recorded over time to seek some trend or pattern in different local goverment areas.
 
+  - [ ] Which police region has the greatest number of incidents recorded?
+  - [ ] How did the trend of incidents recorded in those police regions varied across the years?
+  - [ ] What is the trend of incidents recorded in North West Metro's local government areas changes over time?
+
 - 2 To understand the criminal activity better, it will not only show the record changes over time but also the changes of offence sub-groups and sub-divisions. This will provide a precise landscape of criminal activities in Victoria.
 
+  - [ ] For each LGA , which offence_subdivision, recorded maximum incidents
+  - [ ] For each LGA,Which offence_subgroup was most recorded in the previous found offence_subdivision's?
+  - [ ] What was the trend of each offence_subgroup found over the years?
+
 - 3 Building on the previous analysis, this part will explore the dissect the criminal activities among different suburbs or towns in Victoria.
+
+  - [ ] For each Suburb/Town, which offence_subdivision, recorded maximum incidents
+  - [ ] For each Suburb/Town,Which offence_subgroup was most recorded in the previous found offence_subdivision's?
+
+Row
+-----
+
+***
+
+**Presentation TEAM**
+
+|Name	          |Email Id	                  |Student Id|
+|---------------|:-------------------------:|----------|
+|Karan Grag     |kgar0017@student.monash.edu|  |
+|Jiaying Zhang  |jzha0342@student.monash.edu|30930685  |
+|Ziyao Wang     |zwan0008@student.monash.edu|27925315  |
+
+ 
+***
+
 
 
 Section 1 {data-icon="fa-github"}
@@ -413,9 +426,34 @@ Conclusion & References {data-icon="fa-table"}
 ***
 
 **References**
-[1] 
+[1] Crime Statistics Agency Victoria. (2021). Victim Reports. Retrieved from https://www.crimestatistics.vic.gov.au/crime-statistics/latest-victorian-crime-data/victim-reports-2
 
+[2]  C. Sievert. Interactive Web-Based Data Visualization with R, plotly, and shiny. Chapman and Hall/CRC Florida, 2020.
 
+[3] Hadley Wickham and Evan Miller (2021). haven: Import and Export 'SPSS', 'Stata' and 'SAS' Files. R package version 2.4.1.
+  https://CRAN.R-project.org/package=haven
+
+[4] Hadley Wickham and Jennifer Bryan (2019). readxl: Read Excel Files. R package version 1.3.1. https://CRAN.R-project.org/package=readxl
+
+[5] Hao Zhu (2021). kableExtra: Construct Complex Table with 'kable' and Pipe Syntax. R package version 1.3.4.
+  https://CRAN.R-project.org/package=kableExtra
+
+[6] H. Wickham. ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag New York, 2016.
+
+[7] Katherine Goode and Kathleen Rey (2019). ggResidpanel: Panels and Interactive Versions of Diagnostic Plots using 'ggplot2'. R package
+  version 0.3.0. https://CRAN.R-project.org/package=ggResidpanel
+
+[8] Kirill Müller (2020). here: A Simpler Way to Find Your Files. R package version 1.0.1. https://CRAN.R-project.org/package=here
+
+[9] R Core Team (2021). R: A language and environment for statistical computing. R Foundation for Statistical Computing, Vienna, Austria. URL
+  https://www.R-project.org/.
+
+[10] Richard Iannone, JJ Allaire and Barbara Borges (2020). flexdashboard: R Markdown Format for Flexible Dashboards. R package version 0.5.2.
+  https://CRAN.R-project.org/package=flexdashboard
+
+[11] Yihui Xie (2021). bookdown: Authoring Books and Technical Documents with R Markdown. R package version 0.22.
+
+[12] Yihui Xie (2016). bookdown: Authoring Books and Technical Documents with R Markdown. Chapman and Hall/CRC. ISBN 978-1138700109
 
 
 ***
