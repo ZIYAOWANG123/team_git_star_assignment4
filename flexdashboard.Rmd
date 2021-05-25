@@ -171,6 +171,13 @@ ggplotly(figure2)
 
 Section 2 {data-icon="fa-github-alt"}
 ===================================== 
+---
+### The definition of some concepts to be used
+
+```{r , fig.align ="center"}
+include_graphics("type.png") 
+```
+
 
 ```{r read-data, include=FALSE}
 criminaldata <- read_excel("data/Data_Tables_LGA_Criminal_Incidents_Year_Ending_December_2020.xlsx", sheet = 4)
@@ -182,15 +189,12 @@ criminaluse <- criminaldata %>%
          `Offence Subdivision`,
          `Incidents Recorded`)
 ```
-- 1 
 
-
-Row {data-width=500, data-height = 650}
----
-
-### Chart 1
-
-```{r vis1, fig.width=9,fig.height=12,fig.cap="No .of incidents of top offennce in each LGA"}
+### Which offence_subdivision, recorded maximum incidents in each LGA
+Row {.tabset data-width=1000}
+-------------------------------------
+### Chart1 
+```{r vis1, fig.width=9,fig.height=12}
   criminalfinal<- criminaluse %>% 
     mutate(lgth = str_length(`Offence Subdivision`)) %>% 
   mutate(`Offence Subdivision` = substr(`Offence Subdivision`,start = 5,stop = lgth)) %>% 
@@ -209,11 +213,11 @@ ggplot(aes(y=reorder(`Local Government Area`,incidents),
   theme(axis.text.x = element_blank()) 
  ggplotly(data)
 ```
-Row {data-width=500, data-height = 650}
----
-### Chart 2
 
-```{r vis2, fig.width=10, fig.cap="Trend of each Offence_subdivision from year 2011-2020"}
+
+### Chart2 
+
+```{r vis2, fig.width=10}
   criminalfinal2<- criminaluse %>% 
    mutate(lgth = str_length(`Offence Subdivision`)) %>% 
   mutate(`Offence Subdivision` = substr(`Offence Subdivision`,start = 5,stop = lgth)) %>% 
@@ -236,7 +240,20 @@ ggplot(aes(x=as.numeric(Year),
 
 Column {data-height=800, data-width = 1000}
 --------------------------------
-### Chart 3
+
+- Theft was the **most common** crime in each region.
+
+- **Melbourne** in particular recording round 90,900 burglaries in the past five years,far more than any other region.
+
+- Theft cases reaching a **peak** (about 156,000) in **2016**, but the number has declined in the past two years.
+
+- Burlary/Break and Enter (about 38,000) and Assault and Related Offence (about 37,000) rank second and third, respectively, but far more lower than theft case.
+
+
+Column {data-height=800, data-width = 1000}
+--------------------------------
+
+### Chart3 Which offence_subgroup was most recorded in the previous found offence_subdivision’s?
 
 ```{r datacleaning2, include=FALSE}
 criminaluse2 <- criminaldata %>% 
@@ -246,21 +263,25 @@ criminaluse2 <- criminaldata %>%
          `Incidents Recorded`) %>% 
   filter(`Offence Subdivision` == "B40 Theft")
 ```
-```{r vis3, fig.width=10, fig.cap="Incidents of each offence_subgroup in most recorded offence_subdivision"}
-  criminalfinal3<- criminaluse2 %>% 
-  group_by(Year, `Offence Subgroup`) %>% 
-    summarise(incidents = sum(`Incidents Recorded`)) %>% 
+```{r vis3, fig.width=9,fig.cap="Incidents in each Offence_subgroup of most recorded Offence_subdivision"}
+    criminalfinal3<- criminaluse2 %>%
+  group_by(Year, `Offence Subgroup`) %>%
+    summarise(incidents = sum(`Incidents Recorded`)) %>%
 ggplot(aes(Year,
        incidents,
        fill = `Offence Subgroup` )) +
-  geom_col()+
-   ggtitle("Incidents of each offence_subgroup in most recorded offence_subdivision")
+  geom_col(position="dodge")+
+   ggtitle("Incidents in each Offence_subgroup of most recorded Offence_subdivision")
  ggplotly(criminalfinal3)
 ```
+- Among thefts, **steal from a motor vehicle** has the largest number during the last five years. In 2016, about 63,000 steal from a motor vehicle occurred, but the number of thefts has decreased in the past two years.
 
-Column {data-height=800, data-width = 1000}
+- **Other Theft** is second (around40000), and other offence_subgroup make up only a small fraction.
+
+
+Row {data-height=600, data-width = 1000}
 --------------------------------
-### Chart 4
+### Chart4 What was the trend of each offence_subgroup over the years?
 
 ```{r datacleaning3, include=FALSE}
 criminaluse3 <- criminaldata %>% 
@@ -268,7 +289,7 @@ criminaluse3 <- criminaldata %>%
          `Offence Subgroup`,
          `Incidents Recorded`)
 ```
-```{r vis4, fig.width=10, fig.cap="Trend of incidents of each offence_subgroup"}
+```{r vis4, fig.width=10}
   criminalfinal4<- criminaluse3 %>% 
   mutate(lgth = str_length(`Offence Subgroup`)) %>% 
   mutate(`Offence Subgroup` = substr(`Offence Subgroup`,start = 5,stop = lgth)) %>% 
@@ -286,6 +307,17 @@ criminaluse3 <- criminaldata %>%
  ggplotly(criminalfinal4) %>% 
    hide_legend()
 ```
+Row {data-height=800, data-width = 1000}
+--------------------------------
+- Most offence_subgroup have seen a **decline** in crime over the **last year**, and almost all have seen a small spike in **2016**.
+
+- **Steal from a motor vehicle** in the category of theft has been in the first place in the past five years, with about 50,000 cases occurring every year, far exceeding other offence_subgroups.
+
+- **Other Theft** is in second place (about 39,000 per year) and **Criminal Damage** is third (about 35,000 per year). However, the gap between these two types of crimes and steal from a notor vehicle has gradually **widened** since 2013.
+
+- Since 2019,**public health and safety** cases have **risen** sharply, with almost no cases in 2019 but reached about 37,000 in **2020**.
+
+
 
 Section 3 {data-icon="fa-gitlab"}
 ===================================== 
@@ -318,8 +350,11 @@ data3 %>%
   kable(caption = "Suburbs with maximum incidents over the years") %>% 
   kable_styling(bootstrap_options = c("striped","hover","basic"))
 ```
+* **Melbourne** had maximum no of incidents with more than 1.5 lakh over the years 
+* Other suburbs were 60K incidents in total. 
+
 Row {data-width=1000}
---------------------------------
+---
 ### Chart 1
 
 ```{r Q1,echo=FALSE,fig.width=8,fig.height=15,fig.cap="Top 10 Suburb with most incidents recorded"}
@@ -341,6 +376,15 @@ data3 %>%
   facet_wrap(~Year,ncol = 1, scales = "free")
 ```
 
+Row {data-height=200, data-width = 1000}
+--------------------------------
+*  **Melbourne** not only had overall maximum incidents, but also had the maxiimum crime in each year.
+*  It had least no of crimes in year **2015**.
+*  Suprisiingly, **Melbourne** saw a massive fall of 10K in crime no. from 2019-2020, mqybe due to lockdown restrictions imposed  during COVID-19.
+
+
+Row {data-width=1000}
+--------------------------------
 ### Chart 2
 
 ```{r Q2,echo=FALSE,fig.width=12,fig.height=15,fig.cap="Top 10 Offences recorded"}
@@ -363,11 +407,15 @@ data3 %>%
   xlab("No of Incidents") +
   facet_wrap(~Year,ncol = 1,scales = "free")
 ```
+Row {data-height=800, data-width = 1000}
+--------------------------------
+* **Theft** was the most occurred crime across all the years.
+* **Burglary/Break and enter** type of offence decreased over the years.
 
-Column {data-height=800, data-width = 1000}
--------------------------------------
+Row {data-width=1000}
+--------------------------------
 
-### Chart 4
+### Chart 3
 ```{r Q3,echo=FALSE,fig.width=10,fig.height=4,fig.cap="Top 10 Offfences Suburrb wise"}
 Suburb_imp <- data3 %>% 
   group_by(Year,Suburb) %>%
@@ -390,9 +438,12 @@ Q3graph <- data3 %>%
   geom_col() 
   ggplotly(Q3graph)
 ```
-Column {data-height=800, data-width = 1000}
--------------------------------------
-### Chart 5 
+
+* **Theft** is most occurred crime across the affected Suburbs too
+
+Row {data-width=1000}
+--------------------------------
+### Chart 4
 ```{r Q4,echo=FALSE,fig.width=10,fig.height=10,Fg.cap="Trend of Top 2 Offences in each year w.r.t Suburb" }
 Q4graoh <- data3 %>% 
   mutate(lgth = str_length(Offence_Subdivision)) %>% 
@@ -413,13 +464,32 @@ Q4graoh <- data3 %>%
   facet_wrap(~Suburb)
 ggplotly(Q4graoh)
 ```
+Row {data-width = 1000}
+--------------------------------
+*  Crime rate of the 2 most occured offences im the affected Suburbs were pretty much steafy along the years.
+*  Im **Melbourne**.
+   *  **Disorderly and offensive conduct** crime went off radar after 2014.
+   *  **Breachers of order** were only seen from years 2015-2019.
+   *  **Miscellaneous offence** came into action in year 2020.
 
 Conclusion & References {data-icon="fa-table"}
 =====================================     
 
-**Conclusion**
 
-- bullet
+Column {data-height=800, data-width = 1000}
+--------------------------------
+### Conclusion:
+
+-- In part two, the report show that 
+
+- In every LGA, **theft** occurs most frequently in offence_subdivisions and the incidence of thefts is far greater than other types of offence_subdivision.
+
+- In the theft offence_subdivision, the vast majority are **steal from a motor vehicle** and **other theft**. 
+
+- Because the proportion of theft cases is too large, steal from a motor vehicle and other Theft also the top two in all offence_subgroup. 
+
+- Overall, most of offence_subgroups's number of incidents were up in **2016**, but have declined in the last two years.
+
 
 
 
