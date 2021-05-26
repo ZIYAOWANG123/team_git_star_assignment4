@@ -80,12 +80,12 @@ Row
 Police region Analysis {data-icon="fa-github"}
 ===================================== 
 ```{r cleandata, include=FALSE}
-dat <- read_excel("data/Data_Tables_LGA_Criminal_Incidents_Year_Ending_December_2020.xlsx", sheet=2)
+dat <- read_excel(here::here("data/Data_Tables_LGA_Criminal_Incidents_Year_Ending_December_2020.xlsx"), sheet=2)
 dat <- dat %>% 
   select(c(Year, `Police Region`, `Local Government Area`, `Incidents Recorded`)) 
 ```
 ```{r readdata, include=FALSE}
-dat1 <- read.csv("data/LGA_Criminal_data2020.csv")
+dat1 <- read.csv(here::here("data/LGA_Criminal_data2020.csv"))
 ```
 
 Row {data-width=1000}
@@ -201,7 +201,7 @@ defin
 
 
 ```{r read-data, include=FALSE}
-criminaldata <- read_excel("data/Data_Tables_LGA_Criminal_Incidents_Year_Ending_December_2020.xlsx", sheet = 4)
+criminaldata <- read_excel(here::here("data/Data_Tables_LGA_Criminal_Incidents_Year_Ending_December_2020.xlsx"), sheet = 4)
 ```
 ```{r datacleaning, include=FALSE}
 criminaluse <- criminaldata %>% 

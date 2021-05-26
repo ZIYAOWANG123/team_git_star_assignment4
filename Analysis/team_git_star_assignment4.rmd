@@ -1,6 +1,5 @@
 ---
 title: "team_git_star_assignment4"
-<<<<<<< HEAD
 Subtitle: "Analysis report for criminal incidents in Victoria"
 author: "ZIYAO WANG (Billy)"
 date: "2021/5/15"
@@ -13,15 +12,6 @@ output:
                toc_float: true
   bookdown::pdf_document2: default
 keep_md: true    
-=======
-author: "ZIYAO WANG (Billy)", "Karan Garg", "Jiaying Zhang"
-date: "2021/5/15"
-output:
-  flexdashboard::flex_dashboard:
-    orientation: columns
-    vertical_layout: fill
-
->>>>>>> flex
 ---
 
 # Introduction
@@ -40,11 +30,9 @@ Section 1 - Table 1
 Section 2
 
 - [ ] For each LGA , which offence_subdivision, recorded maximum incidents
-<<<<<<< HEAD
+
 - [ ] For each LGA,Which offence_subgroup was most recorded in the previous found offence_subdivision's?
-=======
 - [ ] Which offence_subgroup was most recorded in the previous found offence_subdivision's?
->>>>>>> 3e94141cab976fcafd2fc24a61aa52b8c4be6e2d
 - [ ] What was the trend of each offence_subgroup found over the years?
 
 Section 3
@@ -66,17 +54,13 @@ library(ggResidpanel)
 library(bookdown)
 library(plotly)
 library(here)
-<<<<<<< HEAD
 library(dplyr)
 library(naniar)
 library(tidytext)
-=======
-library(flexdashboard)
->>>>>>> flex
 ```
 
 ```{r cleandata, include=FALSE}
-dat <- read_excel("data/Data_Tables_LGA_Criminal_Incidents_Year_Ending_December_2020.xlsx", sheet=2)
+dat <- read_excel(here::here("data/Data_Tables_LGA_Criminal_Incidents_Year_Ending_December_2020.xlsx"), sheet=2)
 
 dat <- dat %>% 
   select(c(Year, `Police Region`, `Local Government Area`, `Incidents Recorded`)) 
@@ -84,7 +68,7 @@ dat <- dat %>%
 
 
 ```{r readdata, include=FALSE}
-dat1 <- read.csv("data/LGA_Criminal_data2020.csv")
+dat1 <- read.csv(here::here("data/LGA_Criminal_data2020.csv"))
 ```
 # Section 1
 
@@ -188,7 +172,7 @@ ggplotly(figure2)
 
 ## For each LGA , which offence_subdivision, recorded maximum incidents
 ```{r read-data, include=FALSE}
-criminaldata <- read_excel("data/Data_Tables_LGA_Criminal_Incidents_Year_Ending_December_2020.xlsx", sheet = 4)
+criminaldata <- read_excel(here::here("data/Data_Tables_LGA_Criminal_Incidents_Year_Ending_December_2020.xlsx"), sheet = 4)
 ```
 ```{r datacleaning, include=FALSE}
 criminaluse <- criminaldata %>% 
@@ -197,10 +181,7 @@ criminaluse <- criminaldata %>%
          `Offence Subdivision`,
          `Incidents Recorded`)
 ```
-<<<<<<< HEAD
 
-=======
->>>>>>> flex
 ```{r vis1, fig.width=9,fig.height=12,fig.cap="No .of Imcidents of top offennce in each LGA"}
   criminalfinal<- criminaluse %>% 
     mutate(lgth = str_length(`Offence Subdivision`)) %>% 
