@@ -422,7 +422,7 @@ data3 %>%
   scale_y_reordered() +
   ylab("Type of Offece") +
   xlab("No of Incidents") +
-  ggtitle("Top 10 Offences recorded in each Year")
+  ggtitle("Top 10 Offences recorded in each Year") +
   facet_wrap(~Year,ncol = 1,scales = "free")
 ```
 
@@ -468,6 +468,7 @@ ggplotly(Q3graph)
 
 Row {data-width=1000}
 --------------------------------
+
 ### Trend of Top 2 Offences in each year w.r.t Suburb
 ```{r Q4,echo=FALSE,fig.width=10,fig.height=10,Fg.cap="Trend of Top 2 Offences in each year w.r.t Suburb" }
 Q4graoh <- data3 %>% 
@@ -490,6 +491,8 @@ Q4graoh <- data3 %>%
   facet_wrap(~Suburb)
 ggplotly(Q4graoh)
 ```
+
+
 Row {data-width = 1000}
 --------------------------------
 *  Crime rate of the 2 most occurred offences in the affected Suburbs were pretty much steafy along the years.
