@@ -9,6 +9,8 @@ output:
               css: monashreport.css
               includes:
                before_body: header.html
+               toc: true
+               toc_float: true
   bookdown::pdf_document2: default
 keep_md: true    
 =======
@@ -38,7 +40,11 @@ Section 1 - Table 1
 Section 2
 
 - [ ] For each LGA , which offence_subdivision, recorded maximum incidents
+<<<<<<< HEAD
 - [ ] For each LGA,Which offence_subgroup was most recorded in the previous found offence_subdivision's?
+=======
+- [ ] Which offence_subgroup was most recorded in the previous found offence_subdivision's?
+>>>>>>> 3e94141cab976fcafd2fc24a61aa52b8c4be6e2d
 - [ ] What was the trend of each offence_subgroup found over the years?
 
 Section 3
@@ -166,7 +172,7 @@ trend <- dat_North %>%
 
 figure2 <- ggplot(trend, aes(x= Year, 
                              y = Total_Incidents,
-                             color = "Local.Government.Area"))+
+                             color = Local.Government.Area))+
   geom_line()+
   geom_point() +
   scale_x_continuous(breaks=seq(2011,2020,2)) +
@@ -214,7 +220,12 @@ ggplot(aes(y=reorder(`Local Government Area`,incidents),
   theme(axis.text.x = element_blank()) 
  ggplotly(data)
 ```
-The figure \@ref(fig:vis1)  shows, theft was the most common crime in each region, with Melbourne in particular recording some 90,900 burglaries in the past five years.
+The figure \@ref(fig:vis1)  shows:
+
+- Theft was the most common crime in each region.
+
+- Melbourne in particular recording round 90,900 burglaries in the past five years,far more than any other region.
+
 ```{r vis2, fig.width=10, fig.cap="Trend of each Offence_subdivision from year 2011-2020"}
   criminalfinal2<- criminaluse %>% 
    mutate(lgth = str_length(`Offence Subdivision`)) %>% 
@@ -244,41 +255,37 @@ The figure \@ref(fig:vis2)  shows
 
 
 
-## For each LGA,Which offence_subgroup was most recorded in the previous found offence_subdivision's?
+## Which offence_subgroup was most recorded in the previous found offence_subdivision’s?
 ```{r datacleaning2, include=FALSE}
-criminaluse2 <- criminaldata %>% 
+criminaluse2 <- criminaldata %>%
   select(Year,
-         `Local Government Area`,
          `Offence Subgroup`,
          `Offence Subdivision`,
-         `Incidents Recorded`) %>% 
+         `Incidents Recorded`) %>%
   filter(`Offence Subdivision` == "B40 Theft")
 ```
-```{r vis3, fig.width=9,fig.height=12,fig.cap="Incidents in each Offence_subgroup of most recorded Offence_subdivision"}
-  criminalfinal3<- criminaluse2 %>% 
-     mutate(lgth = str_length(`Offence Subdivision`),
-            lgth1 = str_length(`Offence Subgroup`)) %>% 
-  mutate(`Offence Subdivision` = substr(`Offence Subdivision`,start = 5,stop = lgth),
-         `Offence Subgroup` = substr(`Offence Subgroup`,start = 5,stop = lgth1)) %>% 
-  group_by(`Local Government Area`, `Offence Subgroup`) %>% 
-    summarise(incidents = sum(`Incidents Recorded`)) %>% 
-ggplot(aes(y=reorder(`Local Government Area`,incidents),
-       x=incidents,
+```{r vis3, fig.width=9,fig.cap="Incidents in each Offence_subgroup of most recorded Offence_subdivision"}
+    criminalfinal3<- criminaluse2 %>%
+  group_by(Year, `Offence Subgroup`) %>%
+    summarise(incidents = sum(`Incidents Recorded`)) %>%
+ggplot(aes(Year,
+       incidents,
        fill = `Offence Subgroup` )) +
-  geom_col() +
-  xlab("Distribution of no. of incidents") +
-  ylab("Local Government Area")
+  geom_col(position="dodge")+
+   ggtitle("Percentage of each offence_subgroup in the previous found offence_subdivision's")
  ggplotly(criminalfinal3)
 ```
-The figure \@ref(fig:vis3)  shows
+
+
+The figure \@ref(fig:vis3) shows
 
 - Among thefts, steal from a motor vehicle has the largest number during the last five years. In 2016, about 63,000 steal from a motor vehicle occurred, but the number of thefts has decreased in the past two years.
 
-- Other Theft is second(around40000), and other offence_subgroup make up only a small fraction.
+- Other Theft is second (around40000), and other offence_subgroup make up only a small fraction.
 
 
 
-##  What was the trend of each offence_subgroup found over the years?
+##  What was the trend of each offence_subgroup over the years?
 ```{r datacleaning3, include=FALSE}
 criminaluse3 <- criminaldata %>% 
   select(Year,
@@ -311,6 +318,8 @@ The figure \@ref(fig:vis4)  shows
 
 - Other Theft is in second place (about 39,000 per year) and Criminal Damage is third (about 35,000 per year). However, the gap between these two types of crimes and steal from a notor vehicle has gradually widened since 2013.
 
+- Since 2019,public health and safety cases have risen sharply, with almost no cases in 2019 but rising to about 37,000 in 2020.
+
 ## Conclusion:
 
 - In each LGA, theft occurs most frequently in offence_subdivision and the incidence of thefts is far greater than other types of offence_subdivision.
@@ -339,7 +348,9 @@ data3 <- data3 %>%
          Incidents_Recorded = `Incidents Recorded`)
 ```
 
-#W What are the top 10 Suburbs wth maximum no of incidents so far?
+# Section 3 
+
+## What are the top 10 Suburbs wth maximum no of incidents so far?
 
 ```{r Q1-table,echo=FALSE}
 data3 %>% 
@@ -439,7 +450,7 @@ The Figure \@ref(fig:Q3) is clearly in coordination with figure \@ref(fig:Q2) as
 
 ## What is the trend of top 2 offences in each year w.r.t most affected Suburb?
 
-```{r Q4,echo=FALSE,fig.width=10,fig.height=10,Fg.cap="Trend of Top 2 Offences in each year w.r.t Suburb" }
+```{r Q4,echo=FALSE,fig.width=10,fig.height=10,fig.cap="Trend of Top 2 Offences in each year w.r.t Suburb" }
 Q4graoh <- data3 %>% 
   mutate(lgth = str_length(Offence_Subdivision)) %>% 
   mutate(Offence_Subdivision = substr(Offence_Subdivision,start = 5,stop = lgth)) %>% 
