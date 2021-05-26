@@ -77,7 +77,7 @@ Row
 
 
 
-Section 1 {data-icon="fa-github"}
+Police region Analysis {data-icon="fa-github"}
 ===================================== 
 ```{r cleandata, include=FALSE}
 dat <- read_excel("data/Data_Tables_LGA_Criminal_Incidents_Year_Ending_December_2020.xlsx", sheet=2)
@@ -185,7 +185,7 @@ Row {data.width = 600}
 
  - Yet, **few exceptions** such as Hobsons Bay, Moonee Valley and Banyule, the reason maybe they are not the major resident area hence fewer criminal activities occurrence.
 
-Section 2 {data-icon="fa-github-alt"}
+Crime-type Analysis {data-icon="fa-github-alt"}
 ===================================== 
 ---
 ### The definition of some concepts to be used
@@ -295,6 +295,9 @@ ggplot(aes(Year,
    ggtitle("Incidents in each Offence_subgroup of most recorded Offence_subdivision")
  ggplotly(criminalfinal3)
 ```
+
+Row {data-height=800, data-width = 1000}
+--------------------------------
 - Among thefts, **steal from a motor vehicle** has the largest number during the last five years. In 2016, about 63,000 steal from a motor vehicle occurred, but the number of thefts has decreased in the past two years.
 
 - **Other Theft** is second (around40000), and other offence_subgroup make up only a small fraction.
@@ -338,19 +341,6 @@ Row {data-height=800, data-width = 1000}
 
 - Since 2019,**public health and safety** cases have **risen** sharply, with almost no cases in 2019 but reached about 37,000 in **2020**.
 
-Column {data-height=800, data-width = 1000}
---------------------------------
-### Conclusion:
-
--- In part two, the report show that 
-
-- In every LGA, **theft** occurs most frequently in offence_subdivisions and the incidence of thefts is far greater than other types of offence_subdivision.
-
-- In the theft offence_subdivision, the vast majority are **steal from a motor vehicle** and **other theft**. 
-
-- Because the proportion of theft cases is too large, steal from a motor vehicle and other Theft also the top two in all offence_subgroup. 
-
-- Overall, most of offence_subgroups's number of incidents were up in **2016**, but have declined in the last two years.
 
 
 Suburb Analysis {data-icon="fa-gitlab"}
