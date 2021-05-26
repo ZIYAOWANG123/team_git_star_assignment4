@@ -1,0 +1,877 @@
+---
+title: "Analysis on the Causes of Death"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    source_code: embed
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+library(tidyverse)
+library(ggpubr)
+library(flexdashboard)
+library(readxl)
+library(plotly)
+library(kableExtra)
+library(gridExtra)
+library(sf)
+library(hrbrthemes)
+library(viridis)
+```
+
+```{r reading-data, echo = FALSE, message = FALSE, warning = FALSE}
+NSW_CleanData_S1 <- read_csv("data/NSW-CleanData_S1.csv")
+NSW_CleanData_S2 <- read_csv("data/NSW-CleanData_S2.csv")
+QSL_CleanData_S1 <- read_csv("data/QSL-CleanData_S1.csv")
+QSL_CleanData_S2 <- read_csv("data/QSL-CleanData_S2.csv")
+VIC_CleanData_S1 <- read_csv("data/VIC-CleanData_S1.csv")
+VIC_CleanData_S2 <- read_csv("data/VIC-CleanData_S2.csv")
+```
+
+Dashoard {data-icon="fa-globe"}
+=============================
+
+## Introduction 
+
+
+# Part 1
+
+Column {.tabset data-width=600}
+-----------------------------------------------------------------------
+<b><font face="Georgia" size="5em" color="#063c91">Which disease amongst the larger category has caused most deaths over the span of 9 years in the different states.</font></b> 
+
+### New South Wales
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+
+nsw_q1 <- NSW_CleanData_S1 %>% 
+  filter(str_detect(`Cause of death and ICD-10 code`, "^CHAPTER")) %>% 
+  pivot_longer(!`Cause of death and ICD-10 code`, names_to = "Year", values_to = "Count") %>% 
+  mutate(Year = str_remove(Year, "_M")) %>% 
+  mutate(Year = str_remove(Year, "_F")) %>% 
+  group_by(`Cause of death and ICD-10 code`, Year) %>% 
+  summarise(total_count = sum(Count))
+
+a <- ggplot(nsw_q1, aes(Year, `Cause of death and ICD-10 code`, fill= total_count)) + 
+  geom_tile() + theme(axis.text.y = element_blank(), axis.ticks.y = element_blank()) +
+  scale_fill_viridis(discrete=FALSE) +
+    geom_text(aes(label = round(total_count, 1)), color = "white")
+
+ggplotly(a)
+```
+
+### Queensland
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+
+qsl_q1 <- QSL_CleanData_S1 %>% 
+  filter(str_detect(`Cause of death and ICD-10 code`, "^CHAPTER")) %>% 
+  pivot_longer(!`Cause of death and ICD-10 code`, names_to = "Year", values_to = "Count") %>% 
+  mutate(Year = str_remove(Year, "_M")) %>% 
+  mutate(Year = str_remove(Year, "_F")) %>% 
+  group_by(`Cause of death and ICD-10 code`, Year) %>% 
+  summarise(total_count = sum(Count))
+
+b <- ggplot(qsl_q1, aes(Year, `Cause of death and ICD-10 code`, fill= total_count)) + 
+  geom_tile() + theme(axis.text.y = element_blank(), axis.ticks.y = element_blank()) +
+  scale_fill_viridis(discrete=FALSE) +
+    geom_text(aes(label = round(total_count, 1)), color = "white")
+
+ggplotly(b)
+```
+
+### Victoria
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+
+vic_q1 <- VIC_CleanData_S1 %>% 
+  filter(str_detect(`Cause of death and ICD-10 code`, "^CHAPTER")) %>% 
+  pivot_longer(!`Cause of death and ICD-10 code`, names_to = "Year", values_to = "Count") %>% 
+  mutate(Year = str_remove(Year, "_M")) %>% 
+  mutate(Year = str_remove(Year, "_F")) %>% 
+  group_by(`Cause of death and ICD-10 code`, Year) %>% 
+  summarise(total_count = sum(Count))
+
+c <- ggplot(vic_q1, aes(Year, `Cause of death and ICD-10 code`, fill= total_count)) + 
+  geom_tile() + theme(axis.text.y = element_blank(), axis.ticks.y = element_blank()) +
+  scale_fill_viridis(discrete=FALSE) +
+    geom_text(aes(label = round(total_count, 1)), color = "white")
+
+ggplotly(c)
+```
+
+Column {.sidebar}
+-----------------------------------------------------------------------
+
+**Neoplasms** 
+
+Neoplasms has caused the highest number of deaths in all three states. It is a new and abnormal growth of tissue in a part of the body, especially as a characteristic of cancer.
+
+***
+
+**New South Wales**
+
+- The highest number of deaths were recorded in 2019, for Neoplasms with a count of **16704** deaths. 
+
+***
+
+**Queensland**
+
+- The highest number of deaths were recorded in 2019 for Neoplasms with a count of **10120** deaths.
+
+***
+
+**Victoria**
+
+- The highest number of deaths were recorded in 2019 for Neoplasms with a count of **12476** deaths.
+
+# Part 2
+
+Column {.tabset data-width=600}
+-----------------------------------------------------------------------
+
+<b><font face="Georgia" size="5em" color="#063c91">Which among the different states have the highest mortality rate towards a specific disease.</font></b> 
+
+### New South Wales
+
+```{r}
+NSW_CleanData_S1_long <- NSW_CleanData_S1 %>% 
+  filter(str_detect(`Cause of death and ICD-10 code`, "^CHAPTER")) %>% 
+  pivot_longer(cols = - "Cause of death and ICD-10 code",
+               names_to = "gender_nsw",
+               values_to = "count_nsw")
+```
+
+```{r}
+total_deaths <- sum(NSW_CleanData_S1_long$count_nsw) 
+```
+
+```{r}
+nsw_chapter1 <- NSW_CleanData_S1_long %>% 
+  group_by(`Cause of death and ICD-10 code`) %>% 
+  summarise(mortality_rate_nsw = ((sum(count_nsw)/total_deaths)*100)) %>% 
+  mutate(`Cause of death and ICD-10 code` = str_remove(`Cause of death and ICD-10 code`, "CHAPTER [A-Z][A-Z]?[A-Z]?[A-Z]?[A-Z]? ")) %>% 
+  mutate(`Cause of death and ICD-10 code` = str_remove(`Cause of death and ICD-10 code`, "\\([A-Z][0-9][0-9]-[A-Z][0-9][0-9]\\)")) 
+
+ knitr::kable(nsw_chapter1%>% arrange(desc(mortality_rate_nsw)), caption = "Mortality Rate in NSW") %>% 
+  kable_classic(full_width = F, html_font = "Cambria")
+```
+### Queensland
+
+```{r , echo = FALSE, message = FALSE, warning = FALSE}
+QSL_CleanData_S1_long <- QSL_CleanData_S1 %>% 
+  filter(str_detect(`Cause of death and ICD-10 code`, "^CHAPTER")) %>% 
+  pivot_longer(cols = -"Cause of death and ICD-10 code",
+               names_to = "gender_qsl",
+               values_to = "count_qsl")
+```
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+total_deaths_qsl <- sum(QSL_CleanData_S1_long$count_qsl) 
+```
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+qsl_chapter1 <- QSL_CleanData_S1_long %>% 
+  group_by(`Cause of death and ICD-10 code`) %>% 
+  summarise(mortality_rate_qsl = ((sum(count_qsl)/total_deaths_qsl)*100)) %>% 
+ mutate(`Cause of death and ICD-10 code` = str_remove(`Cause of death and ICD-10 code`, "CHAPTER [A-Z][A-Z]?[A-Z]?[A-Z]?[A-Z]? ")) %>% 
+  mutate(`Cause of death and ICD-10 code` = str_remove(`Cause of death and ICD-10 code`, "\\([A-Z][0-9][0-9]-[A-Z][0-9][0-9]\\)")) 
+
+
+  knitr::kable(qsl_chapter1 %>% arrange(desc(mortality_rate_qsl)), caption = "mortality rate in QSL") %>% 
+  kable_classic(full_width = F, html_font = "Cambria")
+ 
+```
+### Victoria
+
+```{r}
+VIC_CleanData_S1_long <- VIC_CleanData_S1 %>% 
+   filter(str_detect(`Cause of death and ICD-10 code`, "^CHAPTER")) %>% 
+  pivot_longer(cols = -`Cause of death and ICD-10 code`,
+               names_to = "gender_vic",
+               values_to = "count_vic") 
+```
+
+```{r}
+total_deaths_vic <- sum(VIC_CleanData_S1_long$count_vic) 
+```
+
+```{r}
+vic_chapter1 <- VIC_CleanData_S1_long %>% 
+  group_by(`Cause of death and ICD-10 code`) %>% 
+  summarise(mortality_rate_vic = ((sum(count_vic)/total_deaths_vic)*100)) %>% 
+   mutate(`Cause of death and ICD-10 code` = str_remove(`Cause of death and ICD-10 code`, "CHAPTER [A-Z][A-Z]?[A-Z]?[A-Z]?[A-Z]? ")) %>% 
+  mutate(`Cause of death and ICD-10 code` = str_remove(`Cause of death and ICD-10 code`, "\\([A-Z][0-9][0-9]-[A-Z][0-9][0-9]\\)")) 
+
+
+knitr::kable(vic_chapter1 %>% arrange(desc(mortality_rate_vic)), caption = "mortality rate in VIC") %>% 
+  kable_classic(full_width = F, html_font = "Cambria")
+```
+
+Row
+-----------------------------------------------------------------------
+### New South Wales
+```{r}
+a <- ggplot(nsw_chapter1,
+       aes(x = mortality_rate_nsw,
+           y = reorder(`Cause of death and ICD-10 code`, -mortality_rate_nsw), fill = `Cause of death and ICD-10 code`)) +
+  geom_col() + theme_minimal() + 
+  coord_flip() +
+  theme(
+    axis.text.x = element_blank(),
+  axis.ticks = element_blank()) + ylab("Cause of Death") + xlab("Mortality Rate") + ggtitle("Cause of death and Mortality rate New South Wales")
+
+
+ggplotly(a) %>% 
+  layout(showlegend = FALSE)
+```
+
+
+### Queensland
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+b <- ggplot(qsl_chapter1,
+       aes(x = mortality_rate_qsl,
+           y = reorder(`Cause of death and ICD-10 code`, -mortality_rate_qsl), fill = `Cause of death and ICD-10 code`)) +
+  geom_col() + theme_minimal() + 
+  coord_flip() +
+  theme(
+    axis.text.x = element_blank(),
+  axis.ticks = element_blank()) + ylab("Cause of Death") + xlab("Mortality Rate") + ggtitle("Cause of death and Mortality rate Queensland")
+
+
+ggplotly(b) %>% 
+  layout(showlegend = FALSE)
+```
+
+
+### Victoria
+
+```{r}
+c <- ggplot(vic_chapter1,
+       aes(x = mortality_rate_vic,
+           y = reorder(`Cause of death and ICD-10 code`, -mortality_rate_vic), fill = `Cause of death and ICD-10 code`))  +
+  geom_col() + theme_minimal() + 
+  coord_flip() +
+  theme(
+    axis.text.x = element_blank(),
+  axis.ticks = element_blank()) + ylab("Cause of Death") + xlab("Mortality Rate") + ggtitle("Cause of death and Mortality rate Victoria")
+
+ggplotly(c) %>% 
+  layout(showlegend = FALSE)
+```
+
+Row {data-height=200}
+-----------------------------------------------------------------------
+
+### Conclusion 
+Mortality rate or death rate is a measure of the number of deaths in a particular population due to a specific disease. We are comparing the 3 states in Australia which is Victoria, New South Wales, and Queensland.  The data sets contain different type of diseases and the total number of deaths from year 2000 to year 2019. 
+
+**New South Wales**
+Top 3 disease is **Circulatory system**, **Neoplasms**, and **Respiratory systems**.
+
+**Queensland**
+Top 3 disease is **Circulatory system**, **Neoplasms**, and **Respiratory systems**.
+
+**Victoria**
+Top 3 disease is **Circulatory system**, **Neoplasms**, and **Respiratory systems**.
+
+First we are calculating the total number of deaths from 2000 to 2019 from each disease and we are going to divide each deaths from a specific disease to the total number of deaths from all disease through 2000 to 2019. 
+
+The 3 tables are showing each of the proportions from 3 different states, and we can use the data compare and contrast on which states are having which diseases.  We  can  conclude the top 3 disease which are **Neoplasms**, **Circulatory system **, and **Respiratory disease** are very common in the 3 states, they are almost reaching 30%  and 10 % of all the total deaths from all disease  which is clearly showing that 3 of the states are very struggling with the 3 diseases.
+
+The 3 figures are showing the overview of death rate in the 3 different states, at glance we can directly see that the top cause of death in 3 of the states are **Circulatory system** and **Neoplasms**, showing that 3 of the states are struggling with the diseases.
+
+# Part 3
+
+Column {.tabset data-width=600}
+-----------------------------------------------------------------------
+
+<b><font face="Georgia" size="5em" color="#063c91">Analysis to figure out whether the causes of death are more dominated by age, sex, or type of diseases.</font></b> 
+
+### New South Wales
+```{r nsw, echo = FALSE, message = FALSE, warning = FALSE}
+
+plotting_df <- NSW_CleanData_S2 %>% select(Count_M, Count_F, age_group, `Cause of death and ICD-10 code`) %>% 
+  pivot_longer(c(Count_M, Count_F), names_to = "Gender", values_to = "Count") %>% 
+  mutate(Gender = ifelse(Gender == "Count_M", "Male", "Female")) %>% 
+  mutate(Count = ifelse(Gender == "Male", -Count, Count))
+
+temp_df <-
+  plotting_df %>% 
+  filter(Gender == "Female") %>% 
+  arrange(factor(age_group, levels = c("Under 1 year", "1–14 years","15–24 years","25–34 years","35–44 years","45–54 years","55–64 years","65–74 years","75–84 years","85–94 years","95 years and over")))
+
+the_order <- temp_df$age_group
+
+nsw_graph <- plotting_df %>% 
+  ggplot(aes(x = age_group, y = Count, group = Gender, fill = Gender)) +
+  geom_bar(stat = "identity", width = 9) +
+  coord_flip() +
+  scale_x_discrete(limits = the_order) + 
+  scale_y_continuous(breaks = seq(-15000, 15000, 5000), 
+                     labels = abs(seq(-15000, 15000, 5000))) +
+  labs(x = "Age Group", y = "Count") +
+  scale_fill_manual(values=c("#101820FF", "#006B38FF"),
+                    labels=c("Male", "Female")) +
+  theme_minimal()
+
+ggplotly(nsw_graph)
+```
+
+### Queensland
+
+```{r qsl, echo = FALSE, message = FALSE, warning = FALSE}
+
+plotting_df <- QSL_CleanData_S2 %>% select(Count_M, Count_F, age_group, `Cause of death and ICD-10 code`) %>% 
+  pivot_longer(c(Count_M, Count_F), names_to = "Gender", values_to = "Count") %>% 
+  mutate(Gender = ifelse(Gender == "Count_M", "Male", "Female")) %>% 
+  mutate(Count = ifelse(Gender == "Male", -Count, Count))
+
+temp_df <-
+  plotting_df %>% 
+  filter(Gender == "Female") %>% 
+  arrange(factor(age_group, levels = c("Under 1 year", "1–14 years","15–24 years","25–34 years","35–44 years","45–54 years","55–64 years","65–74 years","75–84 years","85–94 years","95 years and over")))
+
+the_order <- temp_df$age_group
+
+qsl_graph<- plotting_df %>% 
+  ggplot(aes(x = age_group, y = Count, group = Gender, fill = Gender)) +
+  geom_bar(stat = "identity", width = 9) +
+  coord_flip() +
+  scale_x_discrete(limits = the_order) + 
+  scale_y_continuous(breaks = seq(-15000, 15000, 5000), 
+                     labels = abs(seq(-15000, 15000, 5000))) +
+  labs(x = "Age Group", y = "Count") +
+  scale_fill_manual(values=c("#006B38FF", "#101820FF"),
+                    name="",
+                    breaks=c("Male", "Female"),
+                    labels=c("Male", "Female")) +
+  theme_minimal()
+
+ggplotly(qsl_graph)
+```
+
+### Victoria
+```{r vic, echo = FALSE, message = FALSE, warning = FALSE}
+
+plotting_df <- VIC_CleanData_S2 %>% select(Count_M, Count_F, age_group, `Cause of death and ICD-10 code`) %>% 
+  pivot_longer(c(Count_M, Count_F), names_to = "Gender", values_to = "Count") %>% 
+  mutate(Gender = ifelse(Gender == "Count_M", "Male", "Female")) %>% 
+  mutate(Count = ifelse(Gender == "Male", -Count, Count))
+
+temp_df <-
+  plotting_df %>% 
+  filter(Gender == "Female") %>% 
+  arrange(factor(age_group, levels = c("Under 1 year", "1–14 years","15–24 years","25–34 years","35–44 years","45–54 years","55–64 years","65–74 years","75–84 years","85–94 years","95 years and over")))
+
+the_order <- temp_df$age_group
+
+vic_graph <- plotting_df %>% 
+  ggplot(aes(x = age_group, y = Count, group = Gender, fill = Gender)) +
+  geom_bar(stat = "identity", width = 9) +
+  coord_flip() +
+  scale_x_discrete(limits = the_order) + 
+  scale_y_continuous(breaks = seq(-15000, 15000, 5000), 
+                     labels = abs(seq(-15000, 15000, 5000))) +
+  labs(x = "Age Group", y = "Count") +
+  scale_fill_manual(values=c("#006B38FF", "#101820FF"),
+                    name="",
+                    breaks=c("Male", "Female"),
+                    labels=c("Male", "Female")) +
+  theme_minimal() 
+
+ggplotly(vic_graph)
+```
+
+Column {.sidebar}
+-----------------------------------------------------------------------
+
+- From the graph , it is evident that the number of deaths increase as the age increases. This is due to the universal law of mortality. 
+
+- The most important finding relating to this is arguably the Gompertz law, which shows an exponential rise in death rate with age (Gompertz 1825). It is considered to be a good approximation of the mortality pattern that occurs between sexual maturity and old age.
+
+**Therefore, the causes of death are more dominated by age.**
+
+# Part 4
+
+Column {.tabset data-width=2000}
+-----------------------------------------------------------------------
+
+<b><font face="Georgia" size="5em" color="#063c91">Finding the leading causes of deaths based on sex and further computing the ratio between both genders.</font></b> 
+
+### Top 5 leading Causes of deaths in NSW
+```{r finding-leading-casue-for-female-in-NSW}
+Leading_cause_NSW_F <- NSW_CleanData_S2 %>% 
+  select(`Cause of death and ICD-10 code`,`Count_F`) %>% 
+  arrange(desc(Count_F))
+ Top_5_NSW_F <- head(Leading_cause_NSW_F, 5)
+```
+
+```{r finding-leading-casue-for-male-in-NSW}
+Leading_cause_NSW_M <- NSW_CleanData_S2 %>% 
+  select(`Cause of death and ICD-10 code`,`Count_M`) %>% 
+  arrange(desc(Count_M,)) 
+Top_5_NSW_M <- head(Leading_cause_NSW_M, 5)
+```
+
+```{r table-leading-cause-NSW, echo=FALSE}
+kable(Top_5_NSW_F) %>%
+kable_styling(full_width = FALSE, position = "float_left")
+kable(Top_5_NSW_M) %>%
+  kable_styling(full_width = FALSE, position = "left")
+
+```
+
+The table above demonstrates the leading cause of death for both male and female in New South Wales. **Ischaemic heart diseases** is the highest cause of death for both male and female, Ischaemic heart disease is the condition when the heart is starved of oxygen due to a short of blood supply. While it occurs more common for male. Additionally, besides the Isachaemic heart diseaes,  **Cerebrovascular diseases (I60-I69)**, **Malignant neoplasms of digestive organs (C15-C26)** and **Other forms of heart disease (I30-I52)** are the common top causes for female and male in NSW. While the second highest cause of death for female is organic/symptomatic mental disorders, as women are twice as likely to experience anxiety as men, various social factors put women at greater risk of poor mental health than men. It is interesting to see that the **Malignant neoplasms of respiratory and intrathoracic organs (C30-C39)** is the third cause of death for male in NSW, as men tend to have more cigarettes than women, therefore a highly chance to get the disease.
+
+```{r filter-agegroup-with-leading-causes}
+Ischa_NSW_F<- NSW_CleanData_S2 %>% 
+  select(`Cause of death and ICD-10 code`,`Count_F`,`age_group`) %>% 
+  filter(`Cause of death and ICD-10 code` %in% Top_5_NSW_F$`Cause of death and ICD-10 code`  )
+
+Ischa_NSW_M<- NSW_CleanData_S2 %>% 
+  select(`Cause of death and ICD-10 code`,`Count_M`,`age_group`) %>% 
+  filter(`Cause of death and ICD-10 code` %in% Top_5_NSW_M$`Cause of death and ICD-10 code`  )
+```
+
+```{r Leading-casue-for-NSW-agegroup}
+p1 <- ggplot(Ischa_NSW_F, aes(x = age_group , y = Count_F, fill = `Cause of death and ICD-10 code`)) +
+  geom_col()+
+  theme_bw()+
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+  ggtitle("Leading cause for NSW female by age group")
+
+ggplotly(p1) %>% 
+  layout(showlegend = FALSE)
+
+p2 <- ggplot(Ischa_NSW_M, aes(x = age_group , y = Count_M, fill = `Cause of death and ICD-10 code`)) +
+  geom_col()+
+  theme_bw()+
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+  ggtitle("Leading cause for NSW male by age group")
+
+ggplotly(p2) %>% 
+
+layout(showlegend = FALSE)
+```
+The graph above illustrates the leading cause of death in NSW for male and female by age groups. 
+ - A clear trend for female that as the age increase, the number of deaths for the leading causes increases. 
+ 
+ -  In general, Higher the age group, higher the number of death caused by the top five causes for both female and male.
+ 
+ - **Malignant neoplasms of digestive organs** tends to occur by age group of 35-44 for male and female.
+ 
+ - **Organic, including symptomatic, mental disorders** tends to occur by the age group of 75-84 for female.
+
+### Top five causes of death by age group - Victoria
+```{r finding-leading-casue-for-female-in-VIC}
+Leading_cause_VIC_F <- VIC_CleanData_S2 %>% 
+  select(`Cause of death and ICD-10 code`,`Count_F`) %>% 
+  arrange(desc(Count_F))
+ Top_5_VIC_F <- head(Leading_cause_VIC_F, 5)
+```
+
+```{r finding-leading-casue-for-male-in-VIC}
+Leading_cause_VIC_M <- VIC_CleanData_S2 %>% 
+  select(`Cause of death and ICD-10 code`,`Count_M`) %>% 
+  arrange(desc(Count_M,)) 
+Top_5_VIC_M <- head(Leading_cause_VIC_M, 5)
+```
+
+```{r table-leading-cause-VIC, echo=FALSE}
+kable(Top_5_VIC_F) %>%
+kable_styling(full_width = FALSE, position = "float_left")
+kable(Top_5_VIC_M) %>%
+  kable_styling(full_width = FALSE, position = "left")
+```
+The table above demonstrates the top 5 leading cause of death for male and female in Victoria. Similar with New South Wales, **Ischaemic heart diseases** is the top cause among all the diseases. However, compared to New South Wales, **Cerebrovascular diseases** is no longer included in the top 5 causes for male, while **Chronic lower respiratory disease** is fifth cause of death for Victoria Male. 
+
+```{r filter-agegroup-with-leading-causes-VIC}
+Ischa_VIC_F<- VIC_CleanData_S2 %>% 
+  select(`Cause of death and ICD-10 code`,`Count_F`,`age_group`) %>% 
+  filter(`Cause of death and ICD-10 code` %in% Top_5_VIC_F$`Cause of death and ICD-10 code`  )
+
+Ischa_VIC_M<- VIC_CleanData_S2 %>% 
+  select(`Cause of death and ICD-10 code`,`Count_M`,`age_group`) %>% 
+  filter(`Cause of death and ICD-10 code` %in% Top_5_VIC_M$`Cause of death and ICD-10 code`  )
+```
+
+```{r Leading-cause-by-agegroup-VIC, fig.height = 10, fig.width= 10}
+p3 <- ggplot(Ischa_VIC_F, aes(x = age_group , y = Count_F, fill = `Cause of death and ICD-10 code`)) +
+  geom_col()+
+  theme_bw()+
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+  ggtitle("Leading cause for VIC female by age group")
+
+ggplotly(p3) %>% 
+  layout(showlegend = FALSE)
+
+p4 <- ggplot(Ischa_VIC_M, aes(x = age_group , y = Count_M, fill = `Cause of death and ICD-10 code`)) +
+  geom_col()+
+  theme_bw()+
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+  ggtitle("Leading cause for VIC male by age group")
+
+ggplotly(p4) %>% 
+  layout(showlegend = FALSE)
+
+```
+
+The figure above illustrates the leading cause of death in Victoria for male and female by age group.
+
+- The age group of deaths caused by the top 5 causes is younger than NSW, which starts from 25-34, while for Victoria starts from age group of 1-14 years.
+
+- The cause of death for age group of 1-14 and 15–24 years is **Other forms of heart disease** for both male and female in Victoria
+
+### Top five causes of death by age group - Queensland
+```{r finding-leading-casue-for-female-in-QSL}
+Leading_cause_QSL_F <- QSL_CleanData_S2 %>% 
+  select(`Cause of death and ICD-10 code`,`Count_F`) %>% 
+  arrange(desc(Count_F))
+ Top_5_QSL_F <- head(Leading_cause_QSL_F, 5)
+```
+
+```{r finding-leading-casue-for-male-in-QSL}
+Leading_cause_QSL_M <- QSL_CleanData_S2 %>% 
+  select(`Cause of death and ICD-10 code`,`Count_M`) %>% 
+  arrange(desc(Count_M,)) 
+Top_5_QSL_M <- head(Leading_cause_QSL_M, 5)
+```
+
+```{r table-leading-cause-QSL, echo=FALSE}
+kable(Top_5_QSL_F) %>%
+kable_styling(full_width = FALSE, position = "float_left")
+kable(Top_5_QSL_M) %>%
+  kable_styling(full_width = FALSE, position = "left")
+```
+The table above illustrates the top 5 leading cause of death for female and male for Queensland. Similarly to Victoria and New Sales Wales, **Ischamic heart diseases** is the top leading cause for male and female. Whereas **Other heart disease** is no longer the top five causes for male in Queensland.
+
+
+
+```{r filter-agegroup-with-leading-causes-QSL}
+Ischa_QSL_F<- QSL_CleanData_S2 %>% 
+  select(`Cause of death and ICD-10 code`,`Count_F`,`age_group`) %>% 
+  filter(`Cause of death and ICD-10 code` %in% Top_5_QSL_F$`Cause of death and ICD-10 code`  )
+
+Ischa_QSL_M<- QSL_CleanData_S2 %>% 
+  select(`Cause of death and ICD-10 code`,`Count_M`,`age_group`) %>% 
+  filter(`Cause of death and ICD-10 code` %in% Top_5_QSL_M$`Cause of death and ICD-10 code`  )
+```
+
+```{r Leading-cause-by-agegroup-QSL, fig.height = 10, fig.width= 10}
+p5 <- ggplot(Ischa_QSL_F, aes(x = age_group , y = Count_F, fill = `Cause of death and ICD-10 code`)) +
+  geom_col()+
+  theme_bw()+
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+  ggtitle("Leading cause for QSL female by age group")
+
+ggplotly(p5) %>% 
+  layout(showlegend = FALSE)
+
+p6 <- ggplot(Ischa_QSL_M, aes(x = age_group , y = Count_M, fill = `Cause of death and ICD-10 code`)) +
+  geom_col()+
+  theme_bw()+
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
+  ggtitle("Leading cause for QSL male by age group")
+
+ggplotly(p6) %>% 
+  layout(showlegend = FALSE)
+```
+The figure above presents the top 5 cause of death in Queensland for male and female by age groups. 
+
+There are some interesting findings from the figure:
+
+- For female as the age group increases the number of deaths caused by the top 5 causes increases.
+
+- Age group of 75-84 for male is the second highest number of deaths caused by the top 5 causes.
+
+- The top five causes of death start with the age group of 25-34 years old for both male and female.
+
+- **Malignant neoplasms of digestive organs** occurs from 25-34 for male and female. 
+
+Column
+-----------------------------------------------------------------------
+### Conclusion
+
+In conclusion, the top five causes of death for female in New South Wales, Victoria and Queensland are the same. They are **Ischaemic heart diseases**, **Organic, including symptomatic, mental disorders**, **Cerebrovascular diseases**, **Malignant neoplasms of digestive organs** and **Other forms of heart disease**. While it is different for male, instead of mental disorders, **Malignant neoplasms of respiratory and intrathoracic organs** and **Chronic lower respiratory diseases** are included in the top five causes. Besides, regardless of state and sex, **Ischaemic heart diseases** is the top killer to human being. For female, it is important to pay extra attention to mental health, as it is the second cause of death. Whereas it is necessary for male to focus on respiratory and digestive system. In terms of the causes of death by age group, the older the age group, the higher the number of death caused by these leading diseases. Furthermore, Victoria has the youngest age group of death among the three states.
+
+# Part 5
+
+<b style="margin-left:20em"><font face="Georgia" size="5em" color="#063c91">Analysis on the number of natural deaths and self-harmed deaths</font></b>
+
+Column
+-----------------------------------------------------------------------
+
+### Number of natural deaths and self-harmed deaths - NEW SOUTH WALES 
+
+```{r echo=FALSE, message =  FALSE,  warning=FALSE, }
+count_NSW <- NSW_CleanData_S1 %>% 
+  filter(str_detect(`Cause of death and ICD-10 code`, "([A-Z][0-9]*-[A-Z][0-9]*)"), !str_detect(`Cause of death and ICD-10 code`, "^CHAPTER"))%>%
+  pivot_longer (cols = c(`2010_M`:`2019_F`), names_to = "Age_year", values_to = "count")%>%
+  group_by(`Cause of death and ICD-10 code`)%>%
+ summarise(count =  sum(count))%>%
+arrange(desc(count))
+
+ result1 <- head(count_NSW, 20)
+ 
+  kable(result1) %>%
+ kable_classic()%>%
+  row_spec(19, bold = T, color = "white", background = "red")
+
+```
+
+Column
+-----------------------------------------------------------------------
+### Number of natural deaths and self-harmed deaths - QUEENSLAND
+
+```{r echo=FALSE, message =  FALSE,  warning=FALSE}
+count_QSL <- QSL_CleanData_S1 %>% 
+  filter(str_detect(`Cause of death and ICD-10 code`, "([A-Z][0-9]*-[A-Z][0-9]*)"), !str_detect(`Cause of death and ICD-10 code`, "^CHAPTER"))%>%
+  pivot_longer (cols = c(`2010_M`:`2019_F`), names_to = "Age_year", values_to = "count")%>%
+  group_by(`Cause of death and ICD-10 code`)%>%
+ summarise(count =  sum(count))%>%
+arrange(desc(count))
+
+ result2 <- head(count_QSL, 20)
+
+  kable(result2) %>%
+ kable_classic()%>%
+  row_spec(14, bold = T, color = "white", background = "red")
+```
+
+Column
+-----------------------------------------------------------------------
+### Number of natural deaths and self-harmed deaths - VICTORIA
+
+```{r echo=FALSE, message =  FALSE,  warning=FALSE}
+count_VIC <- VIC_CleanData_S1  %>% 
+  filter(str_detect(`Cause of death and ICD-10 code`, "([A-Z][0-9]*-[A-Z][0-9]*)"), !str_detect(`Cause of death and ICD-10 code`, "^CHAPTER"))%>%
+  pivot_longer (cols = c(`2010_M`:`2019_F`), names_to = "Age_year", values_to = "count")%>%
+  group_by(`Cause of death and ICD-10 code`)%>%
+ summarise(count =  sum(count))%>%
+arrange(desc(count))
+
+ result3 <- head(count_VIC, 20)
+   kable(result3) %>%
+kable_classic()%>%
+  row_spec(19, bold = T, color = "white", background = "red")
+```
+
+Column {.sidebar}
+-----------------------------------------------------------------------
+* There were **7988** registered suicides in New South Wales, **6959** in Queensland and **6208** registered suicides in Victoria in the time span of 10 years.
+
+* Suicide was the **19th** leading cause of death in **New South Wales and Victoria** where as it is the **14th** leading cause in **Queensland** from 2010 to 2019.
+
+# Part 6
+
+<b style="margin-left:20em"><font face="Georgia" size="5em" color="#063c91">Comparing and contrasting the self-harmed deaths by age and sex</font></b>
+
+Column {.tabset data-width=500}
+-----------------------------------------------------------------------
+### Self-Poisoning in NSW
+
+```{r echo=FALSE, message =  FALSE,  warning=FALSE}
+answer2.1 <- NSW_CleanData_S1 %>%
+  filter(str_sub(`Cause of death and ICD-10 code`, 1,26) == "Intentional self-poisoning")%>%
+  pivot_longer (cols = c(`2010_M`:`2019_F`), names_to = "Age_year", values_to = "count")%>%
+   transform(`Cause of death and ICD-10 code`=str_replace(`Cause of death and ICD-10 code`, "Intentional self-poisoning by and exposure to", ""))
+
+
+p <- ggplot(answer2.1,  aes(y = count, x = Age_year, fill = `Cause.of.death.and.ICD.10.code`))+
+    theme(axis.text.x = element_text(angle = 60, hjust = 1))+
+  geom_col()
+
+
+fig <- ggplotly(p)
+fig %>% layout(showlegend = FALSE)
+
+```
+
+### Self-Poisoning in QSL
+
+```{r echo=FALSE, message =  FALSE,  warning=FALSE}
+answer2.1_QSL <- QSL_CleanData_S1 %>%
+  filter(str_sub(`Cause of death and ICD-10 code`, 1,26) == "Intentional self-poisoning")%>%
+  pivot_longer (cols = c(`2010_M`:`2019_F`), names_to = "Age_year", values_to = "count")%>%
+   transform(`Cause of death and ICD-10 code`=str_replace(`Cause of death and ICD-10 code`, "Intentional self-poisoning by and exposure to", ""))
+
+
+q <- ggplot(answer2.1_QSL,  aes(y = count, x = Age_year, fill = `Cause.of.death.and.ICD.10.code`))+
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))+
+  geom_col()
+
+fig <- ggplotly(q)
+fig %>% layout(showlegend = FALSE)
+```
+
+### Self-Poisoning in VIC
+
+```{r fig.width= 10, echo=FALSE, message =  FALSE,  warning=FALSE}
+answer2.1_VIC <- VIC_CleanData_S1  %>%
+  filter(str_sub(`Cause of death and ICD-10 code`, 1,26) == "Intentional self-poisoning")%>%
+  pivot_longer (cols = c(`2010_M`:`2019_F`), names_to = "Age_year", values_to = "count")%>%
+   transform(`Cause of death and ICD-10 code`=str_replace(`Cause of death and ICD-10 code`, "Intentional self-poisoning by and exposure to", ""))
+
+
+r <- ggplot(answer2.1_VIC,  aes(y = count, x = Age_year, fill = `Cause.of.death.and.ICD.10.code`))+
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))+
+  geom_col()
+fig <- ggplotly(r)
+fig %>% layout(showlegend = FALSE)
+```
+
+Column {.tabset data-width=500}
+-----------------------------------------------------------------------
+
+### Self - harm in NSW
+
+```{r  fig.width=10, echo=FALSE, message =  FALSE,  warning=FALSE, fig.height = 10, fig.width= 10}
+answer2.2 <- NSW_CleanData_S1 %>%
+  filter(str_sub(`Cause of death and ICD-10 code`, 1,24) == "Intentional self-harm by")%>%
+  pivot_longer (cols = c(`2010_M`:`2019_F`), names_to = "Age_year", values_to = "count")%>%
+  transform(`Cause of death and ICD-10 code`=str_replace(`Cause of death and ICD-10 code`, "Intentional self-harm by", ""))
+
+s <- ggplot(answer2.2,  aes(y = count, x = Age_year, fill = `Cause.of.death.and.ICD.10.code`))+
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))+
+  geom_col()
+
+fig <- ggplotly(s) %>% layout(showlegend = FALSE)
+
+fig
+
+```
+
+### Self - harm in QSL
+
+```{r  fig.width=10, echo=FALSE, message =  FALSE,  warning=FALSE, fig.height = 10, fig.width= 10}
+answer2.2_QSL <- QSL_CleanData_S1 %>%
+  filter(str_sub(`Cause of death and ICD-10 code`, 1,24) == "Intentional self-harm by")%>%
+  pivot_longer (cols = c(`2010_M`:`2019_F`), names_to = "Age_year", values_to = "count")%>%
+  transform(`Cause of death and ICD-10 code`=str_replace(`Cause of death and ICD-10 code`, "Intentional self-harm by", ""))
+
+t <- ggplot(answer2.2_QSL,  aes(y = count, x = Age_year, fill = `Cause.of.death.and.ICD.10.code`))+
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))+
+  geom_col()
+
+fig <- ggplotly(t) %>% layout(showlegend = FALSE)
+
+fig
+
+```
+
+### Self - harm in VIC
+
+```{r  fig.width=10, echo=FALSE, message =  FALSE,  warning=FALSE}
+answer2.2_VIC <- VIC_CleanData_S1  %>%
+  filter(str_sub(`Cause of death and ICD-10 code`, 1,24) == "Intentional self-harm by")%>%
+  pivot_longer (cols = c(`2010_M`:`2019_F`), names_to = "Age_year", values_to = "count")%>%
+  transform(`Cause of death and ICD-10 code`=str_replace(`Cause of death and ICD-10 code`, "Intentional self-harm by", ""))
+
+u <- ggplot(answer2.2_VIC,  aes(y = count, x = Age_year, fill = `Cause.of.death.and.ICD.10.code`))+
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))+
+  geom_col()
+
+fig <- ggplotly(u) %>% layout(showlegend = FALSE)
+
+fig
+
+```
+
+Column {data-width=300}
+-----------------------------------------------------------------------
+
+### Comparing and contrasting the self-harmed by Age
+```{r, echo=FALSE, message =  FALSE,  warning=FALSE}
+
+answer_NSW <-NSW_CleanData_S2 %>%
+    filter(str_sub(`Cause of death and ICD-10 code`, 1,16) == "Intentional self")%>%
+  select( Count_M, Count_F, age_group)
+```
+
+```{r, echo=FALSE, message =  FALSE,  warning=FALSE}
+
+# in QUEENSLAND
+answer_QSL <-QSL_CleanData_S2%>%
+    filter(str_sub(`Cause of death and ICD-10 code`, 1,16) == "Intentional self")%>%
+  select( Count_M, Count_F, age_group)
+```
+
+
+```{r, echo=FALSE, message =  FALSE,  warning=FALSE}
+
+# in VICTORIA
+answer_VIC <-VIC_CleanData_S2 %>%
+    filter(str_sub(`Cause of death and ICD-10 code`, 1,16) == "Intentional self")%>%
+  select( Count_M, Count_F, age_group)
+```
+
+```{r, echo=FALSE, message =  FALSE,  warning=FALSE}
+knitr::kable(answer_NSW, caption = "Total number of Intentional self-harm in different age groups in NSW")%>%
+   kable_paper("hover", full_width = F)%>%
+  kable_styling(full_width = FALSE, position = "left")
+
+
+knitr::kable(answer_QSL, caption = "Total number of Intentional self-harm in different age groups in QSL")%>%
+   kable_paper("hover", full_width = F)%>%
+  kable_styling(full_width = FALSE, position = "left")
+
+
+knitr::kable(answer_VIC, caption = "Total number of Intentional self-harm in different age groups in VIC")%>%
+   kable_paper("hover", full_width = F) %>%
+  kable_styling(full_width = FALSE, position = "left")
+
+
+```
+
+It is interesting to observe that the age group with highest number of self harmed deaths is different for all 3 states
+ 
+* For New south wales and Victoria, the highest proportion of suicides occur among young and middle aged cohorts, while the proportion is lower in older age cohorts. More than half of all suicides occurred were between the ages of 25 and 44. 
+ 
+ * An over all trend was observed that the number of males commiting sucide is much more than females in all 3 states
+ 
+ * In New South Wales males between 25–34 years commited more number of sucides, where as for Queensland and Victoria its 35–44 years with 123 and 112 sucides respectively.
+ 
+ * Where as for females, age group of 35–44 years has the highest count of self harmed deaths in New South Wales and Queensland and 45–54 years of age group in Victoria.
+ 
+ * Another, interesting observation observed was, that there were 2 sucides commitied in the age group of 1–14 years in Queensland, where as the number is zero for NSW and VIC.
+ 
+Column {.sidebar}
+-----------------------------------------------------------------------
+
+**Self - Poisoning**
+
+* In Females the most common self poison is **other and unspecified drugs, medicaments and biological substances.** for all three states. A possible reason for that that is that these drugs must be used in our day to day life and our easily available.
+
+* Where as in Males, although  **other and unspecified drugs, medicaments and biological substances.** are also used, the most commonly used poison is  **other gases and vapours** through out the years in all three states. 
+
+**Self - Harm**
+
+From the self harm plots for New south Wales, Queensland, and Victoria its evident that **hanging, strangulation anf suffocation** is the widely used amongst people to commit sucide. More over it has been observed that the numbe rof people commiting sucuide is higher for New South Wales than that of other two states. For instance the number of people self harming them selves in 2019 was approximately 600 for NSW where as it was close to 500 and 450 for QSL and VIC respectively.
+
+# References
+
+Baptiste Auguie (2017). gridExtra: Miscellaneous Functions for "Grid" Graphics. R package version 2.3.
+  https://CRAN.R-project.org/package=gridExtra
+
+Bob Rudis (2020). hrbrthemes: Additional Themes, Theme Components and Utilities for 'ggplot2'. R package version 0.8.0.
+  https://CRAN.R-project.org/package=hrbrthemes
+
+C. Sievert. Interactive Web-Based Data Visualization with R, plotly, and shiny. Chapman and Hall/CRC Florida, 2020.
+
+Hao Zhu (2021). kableExtra: Construct Complex Table with 'kable' and Pipe Syntax. R package version 1.3.4.
+  https://CRAN.R-project.org/package=kableExtra
+
+Gompertz B. On the nature of the function expressive of the law of human mortality, and on a new mode of determining the value of life contingencies. Philosophical Transactions of the Royal Society of London. 1825;115:513–583.
+
+Pebesma, E., 2018. Simple Features for R: Standardized Support for Spatial Vector Data. The R Journal 10 (1), 439-446,
+  https://doi.org/10.32614/RJ-2018-009
+
+Richard Iannone, JJ Allaire and Barbara Borges (2020). flexdashboard: R Markdown Format for Flexible Dashboards. R
+  package version 0.5.2. https://CRAN.R-project.org/package=flexdashboard
+  
+Simon Garnier (2018). viridis: Default Color Maps from 'matplotlib'. R package version 0.5.1.
+  https://CRAN.R-project.org/package=viridis
+
+Wickham et al., (2019). Welcome to the tidyverse. Journal of Open Source Software, 4(43), 1686,
+  https://doi.org/10.21105/joss.01686

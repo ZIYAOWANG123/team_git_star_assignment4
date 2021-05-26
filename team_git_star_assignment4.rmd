@@ -1,5 +1,6 @@
 ---
 title: "team_git_star_assignment4"
+<<<<<<< HEAD
 Subtitle: "Analysis report for criminal incidents in Victoria"
 author: "ZIYAO WANG (Billy)"
 date: "2021/5/15"
@@ -10,6 +11,15 @@ output:
                before_body: header.html
   bookdown::pdf_document2: default
 keep_md: true    
+=======
+author: "ZIYAO WANG (Billy)", "Karan Garg", "Jiaying Zhang"
+date: "2021/5/15"
+output:
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+
+>>>>>>> flex
 ---
 
 # Introduction
@@ -27,13 +37,13 @@ Section 1 - Table 1
 
 Section 2
 
-- [ ]  For each LGA , which offence_subdivision, recorded maximum incidents
+- [ ] For each LGA , which offence_subdivision, recorded maximum incidents
 - [ ] For each LGA,Which offence_subgroup was most recorded in the previous found offence_subdivision's?
 - [ ] What was the trend of each offence_subgroup found over the years?
 
 Section 3
 
-- [ ]  For each Suburb/Town, which offence_subdivision, recorded maximum incidents
+- [ ] For each Suburb/Town, which offence_subdivision, recorded maximum incidents
 - [ ] For each Suburb/Town,Which offence_subgroup was most recorded in the previous found offence_subdivision's?
 
 ```{r setup, include=FALSE}
@@ -50,9 +60,13 @@ library(ggResidpanel)
 library(bookdown)
 library(plotly)
 library(here)
+<<<<<<< HEAD
 library(dplyr)
 library(naniar)
 library(tidytext)
+=======
+library(flexdashboard)
+>>>>>>> flex
 ```
 
 ```{r cleandata, include=FALSE}
@@ -123,7 +137,7 @@ Since it is the most incidents recorded region, constructing a figure \@ref(fig:
 
 The figures suggest that there is a tendency that the number of incidents recorded is increasing since 2019. This can provide some suggestions to the government in terms of adjusting the public safety policy and assigning the police resources. 
 
-Yet, few exceptions such as Hobsons Bay, Moonee Valley and Banyule, the reason maybe they are not the major resident area hance fewer criminal activities occurrence.
+Yet, few exceptions such as Hobsons Bay, Moonee Valley and Banyule, the reason maybe they are not the major resident area hence fewer criminal activities occurrence.
 
 
 ```{r north, fig.cap = "Crimial activity trend in different suburbs from North West Metro", fig.align='center', fig.height=11,fig.width=10}
@@ -177,7 +191,10 @@ criminaluse <- criminaldata %>%
          `Offence Subdivision`,
          `Incidents Recorded`)
 ```
+<<<<<<< HEAD
 
+=======
+>>>>>>> flex
 ```{r vis1, fig.width=9,fig.height=12,fig.cap="No .of Imcidents of top offennce in each LGA"}
   criminalfinal<- criminaluse %>% 
     mutate(lgth = str_length(`Offence Subdivision`)) %>% 
@@ -185,7 +202,6 @@ criminaluse <- criminaldata %>%
   mutate(`Offence Subdivision` = str_replace(`Offence Subdivision`,"r crimes against the person","Other crimes against the person")) %>% 
   group_by(`Local Government Area`, `Offence Subdivision` ) %>% 
     summarise(incidents = sum(`Incidents Recorded`)) 
-
 data<- criminalfinal %>% arrange(desc(incidents)) %>%
 slice(1) %>% 
 ggplot(aes(y=reorder(`Local Government Area`,incidents),
