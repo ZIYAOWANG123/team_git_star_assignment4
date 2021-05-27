@@ -22,7 +22,7 @@ The ***purpose of this analysis report*** is to assist the policy maker to adjus
 
 In the data analysis, it contains three main parts:
 
-*  To obtain an overview of the criminal incidents among Victoria's police regions. Also, observing the changes of incidents recorded over time to seek some trend or pattern in different local goverment areas.
+*  To obtain an overview of the criminal incidents among Victoria's **police regions**. Also, observing the changes of incidents recorded over time to seek some trend or pattern in different local goverment areas.
 
    *  Which police region has the greatest number of incidents recorded? (\@ref(HAO-1))
    *  How did the trend of incidents recorded in those police regions varied across the years? (\@ref(HAO-2))
@@ -30,11 +30,11 @@ In the data analysis, it contains three main parts:
 
 *  To understand the criminal activity better, it will not only show the record changes over time but also the changes of offence sub-groups and sub-divisions. This will provide a precise landscape of criminal activities in Victoria.
 
-   *  For each LGA , which offence_subdivision, recorded maximum incidents
-   *  For each LGA,Which offence_subgroup was most recorded in the previous found offence_subdivision's?
-   *  What was the trend of each offence_subgroup found over the years?
+   *  For each LGA, which offence_subdivision, recorded maximum incidents? (\@ref(JIA-1))
+   *  For each LGA, Which offence_subgroup was most recorded in the previous found offence_subdivision's? (\@ref(JIA-2))
+   *  What was the trend of each offence_subgroup found over the years? (\@ref(JIA-3))
 
-*  Building on the previous analysis, this part will explore the dissect the criminal activities among different suburbs or towns in Victoria.
+*  Building on the previous analysis, this part will explore the dissect of criminal activities among different **suburbs** or **towns** in Victoria.
 
    *  For each Suburb/Town, which offence_subdivision, recorded maximum incidents
    *   For each Suburb/Town,Which offence_subgroup was most recorded in the previous found offence_subdivision's?
@@ -80,7 +80,7 @@ dat1 <- read.csv(here::here("data/LGA_Criminal_data2020.csv"))
 
 ### Which police region has the greatest number of incidents recorded? [\@ref(INTRO)] {#HAO-1} 
 
-From the table \@ref(tab:table1), it shows an overview of the total number of incidents recorded for each police region from 2011 to 2020. It indicates that the North West Metro police region has recorded maximum incidents during the period. 
+From the table \@ref(tab:table1), it shows an overview of the total number of incidents recorded for each police region from **2011** to **2020**. It indicates that the **North West Metro** police region has recorded maximum incidents during the period. 
 
 ```{r table1, message=FALSE}
 dat_tot <- dat1 %>% 
@@ -100,8 +100,8 @@ table1
 
 Figure \@ref(fig:total) presents the movement of the incidents recorded for each police region over time. 
 
-*  In the four main police regions of Victoria, it illustrates an evident fact that the number of incidents recorded has reached the peak around early 2016, then has a sudden plunge afterward.
-*  The possible reason behind may be that the large decrease on the number of **burglary** and **theft** from 2016 to 2017, according to the report from [Victoria crime statistics](https://www.crimestatistics.vic.gov.au/crime-statistics/latest-victorian-crime-data/victim-reports-2).
+*  In the **4** main police regions of Victoria, it illustrates an evident fact that the number of incidents recorded has reached the peak around early **2016**, then has a sudden plunge afterward.
+*  The possible reason behind may be that the large decrease on the number of **burglary** and **theft** from **2016** to **2017**, according to the report from [Victoria crime statistics](https://www.crimestatistics.vic.gov.au/crime-statistics/latest-victorian-crime-data/victim-reports-2).
 
 ```{r total,fig.cap = "Total number of incidents recorded in each police region", fig.height=8, fig.align='center',fig.width=10}
 dat_var <- dat1 %>% 
@@ -121,18 +121,18 @@ figure1 <- ggplot(dat_var, aes(x= Year,
 ggplotly(figure1)
 ```
 
-Additionally, this report states that the number of deception cases is in a continuous increase, which may  be due to the convenience of technology of e-mail, mobile phones and the internet. Thus, it may highlight some areas for re-enforcement in the future, such as cyber security and private data privacy.
+Additionally, this report states that the number of **deception** cases are in a continuous increase, which may  be due to the convenience of technology of e-mail, mobile phones and the internet. Thus, it may highlight some areas for re-enforcement in the future, such as cyber security and private data privacy.
 
 
 ### What is the trend of incidents recorded in North West Metro's local government areas changes over time? [\@ref(INTRO)] {#HAO-3}
 
 The observation from table \@ref(tab:table1) triggers an interest for further investigation on the **North West Metro** police region. 
 
-Since it is the most incidents recorded region, constructing a figure \@ref(fig:north) to observe the change of the number of incidents recorded in different local government areas may provide some insights. 
+Since it has the most incidents recorded, constructing a figure \@ref(fig:north) to observe the change of the number of incidents recorded in different local government areas may provide some insights. 
 
 The figures suggest that
 
-*  There is a tendency that the number of incidents recorded is increasing since 2019. 
+*  There is a tendency that the number of incidents recorded is increasing since **2019**. 
 *  This can provide some suggestions to the government in terms of adjusting the public safety policy and assigning the police resources. 
 
 Yet, few exceptions such as **Hobsons Bay**, **Moonee Valley** and **Banyule**, the reason maybe they are not the major resident area hence fewer criminal activities occurrence.
@@ -178,7 +178,7 @@ ggplotly(figure2)
 
 ## PART-2
 
-### For each LGA , which offence_subdivision, recorded maximum incidents
+### For each LGA , which offence_subdivision, recorded maximum incidents? [\@ref(INTRO)] {#JIA-1}
 
 ```{r read-data, include=FALSE}
 criminaldata <- read_excel(here::here("data/Data_Tables_LGA_Criminal_Incidents_Year_Ending_December_2020.xlsx"), sheet = 4)
@@ -212,9 +212,8 @@ ggplot(aes(y=reorder(`Local Government Area`,incidents),
 ```
 The figure \@ref(fig:vis1)  shows:
 
-- Theft was the most common crime in each region.
-
-- Melbourne in particular recording round 90,900 burglaries in the past five years,far more than any other region.
+*  **Theft** was the most common crime in each region.
+*  Melbourne in particular recorded around **90,900** burglaries in the past **5** years, far more than any other region.
 
 ```{r vis2, fig.width=10, fig.cap="Trend of each Offence_subdivision from year 2011-2020"}
   criminalfinal2<- criminaluse %>% 
@@ -233,19 +232,15 @@ ggplot(aes(x=as.numeric(Year),
   ylab("No. of Incidents") +
   scale_x_continuous(breaks=seq(2011,2020,2)) +
   xlab("Year") 
- ggplotly(criminalfinal2) %>% 
-   hide_legend()
+ ggplotly(criminalfinal2)
 ```
 The figure \@ref(fig:vis2)  shows
 
-- Theft cases have far exceeded other types of crime in the past five years, especially reaching a peak (about 156,000) in 2016, but the number has declined in the past two years.
-
-- Burlary/Break and Enter (about 38,000) and Assault and Related Offence (about 37,000) rank second and third, respectively.
-
+*  **Theft** cases have far exceeded other types of crime in the past **5** years, especially reaching a peak (about **156,000**) in **2016**, but the number has declined in the past **2** years.
+*  **Burglary**/**Break and Enter** (about **38,000**) and **Assault and Related Offence** (about **37,000**) rank **2nd** and **3rd**, respectively.
 
 
-
-## Which offence_subgroup was most recorded in the previous found offence_subdivision’s?
+### Which offence_subgroup was most recorded in the previous found offence_subdivision’s? [\@ref(INTRO)] {#JIA-2}
 ```{r datacleaning2, include=FALSE}
 criminaluse2 <- criminaldata %>%
   select(Year,
@@ -269,13 +264,11 @@ ggplot(aes(Year,
 
 The figure \@ref(fig:vis3) shows
 
-- Among thefts, steal from a motor vehicle has the largest number during the last five years. In 2016, about 63,000 steal from a motor vehicle occurred, but the number of thefts has decreased in the past two years.
-
-- Other Theft is second (around40000), and other offence_subgroup make up only a small fraction.
-
+*  Among thefts, ***steal from a motor vehicle*** has the largest number during the last **5** years. In **2016**, about **63,000** steal from a motor vehicle occurred, but the number of thefts has decreased in the past **2** years.
+*  Other Theft is second (around **40000**), and other offence-subgroup make up only a small fraction.
 
 
-##  What was the trend of each offence_subgroup over the years?
+###  What was the trend of each offence_subgroup over the years? [\@ref(INTRO)] {#JIA-3}
 ```{r datacleaning3, include=FALSE}
 criminaluse3 <- criminaldata %>% 
   select(Year,
@@ -302,24 +295,19 @@ criminaluse3 <- criminaldata %>%
 ```
 The figure \@ref(fig:vis4)  shows
 
-- Most have seen a decline in crime over the past year, and almost all have seen a small spike in 2016.
+*  Most have seen a decline in crime over the past **5** year, and almost all have seen a small spike in 2016.
+*  ***Steal from a motor vehicle*** in the category of theft has been in the first place in the past **5** years, with about **50,000** cases occurring every year, far exceeding other offence-subgroups.
+*  Other Theft is in second place (about **39,000** per year) and **Criminal Damage** is **3rd** (about **35,000** per year). However, the gap between these two types of crimes and steal from a motor vehicle has gradually widened since **2013**.
+*  Since **2019**, ***public health and safety*** cases have risen sharply, with almost no cases in 2019 but rising to about **37,000** in **2020**.
 
-- Steal from a motor vehicle in the category of theft has been in the first place in the past five years, with about 50,000 cases occurring every year, far exceeding other offence_subgroups.
+### Inference:
 
-- Other Theft is in second place (about 39,000 per year) and Criminal Damage is third (about 35,000 per year). However, the gap between these two types of crimes and steal from a notor vehicle has gradually widened since 2013.
-
-- Since 2019,public health and safety cases have risen sharply, with almost no cases in 2019 but rising to about 37,000 in 2020.
-
-## Conclusion:
-
-- In each LGA, theft occurs most frequently in offence_subdivision and the incidence of thefts is far greater than other types of offence_subdivision.
-
-- In the theft offence_subdivision, the vast majority are steal from a motor vehicle and other Theft.
-
-- Of all offence_subgroups, Steal from a motor vehicle in all offence_subgroups, Other Theft and Criminal Damage were the top three, but the vast majority of offence_subgroups were up in 2016, but have declined in the last two years.
+*  In each LGA, theft occurs most frequently in offence_subdivision and the incidence of thefts is far greater than other types of offence_subdivision.
+*  In the theft offence_subdivision, the vast majority are steal from a motor vehicle and other Theft.
+*  Of all offence_subgroups, Steal from a motor vehicle in all offence_subgroups, Other Theft and Criminal Damage were the top three, but the vast majority of offence_subgroups were up in 2016, but have declined in the last two years.
 
 
-
+## PART-3
 
 
 ```{r read-file,include=FALSE}
