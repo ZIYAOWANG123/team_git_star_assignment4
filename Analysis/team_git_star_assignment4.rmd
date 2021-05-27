@@ -35,7 +35,7 @@ In the data analysis, it contains three main parts:
 *  To understand the criminal activity better, it will not only show the record changes over time but also the changes of offense sub-groups and sub-divisions. This will provide a precise landscape of criminal activities in Victoria.
 
    *  For each LGA, which offense_subdivision, recorded maximum incidents? (\@ref(JIA-1))
-   *  For each LGA, Which offense_subgroup was most recorded in the previous found offense_subdivision's? (\@ref(JIA-2))
+   *  Which offense_subgroup was most recorded in the previous found offense_subdivision's? (\@ref(JIA-2))
    *  What was the trend of each offense_subgroup found over the years? (\@ref(JIA-3))
 
 *  Building on the previous analysis, this part will explore the dissect of criminal activities among different **suburbs** or **towns** in Victoria.
