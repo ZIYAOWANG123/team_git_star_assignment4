@@ -1,17 +1,21 @@
 ---
-title: "Analysis report for criminal incidents in Victoria"
+title: "Analysis Report On Crime Incidents In Victoria"
 Subtitle: "Team_Git_Star_Assignment-4"
 author: "Ziyao Wang (Billy), Jiaying Zhang (30930685), Karan Garrg (32106580)"
 date: '`r Sys.Date()`'
 output:
   bookdown::html_document2: 
+              citation_package: biblatex
               css: monashreport.css
               includes:
                before_body: header.html
                toc: true
                toc_float: true
   bookdown::pdf_document2: default
-keep_md: true    
+keep_md: true 
+bibliography: 
+- packages.bib
+biblio-style: authoryear-comp
 ---
 
 # INTRODUCTION {#INTRO}
@@ -22,25 +26,25 @@ The ***purpose of this analysis report*** is to assist the policy maker to adjus
 
 In the data analysis, it contains three main parts:
 
-*  To obtain an overview of the criminal incidents among Victoria's **police regions**. Also, observing the changes of incidents recorded over time to seek some trend or pattern in different local goverment areas.
+*  To obtain an overview of the criminal incidents among Victoria's **police regions**. Also, observing the changes of incidents recorded over time to seek some trend or pattern in different local government areas.
 
    *  Which police region has the greatest number of incidents recorded? (\@ref(HAO-1))
    *  How did the trend of incidents recorded in those police regions varied across the years? (\@ref(HAO-2))
    *  What is the trend of incidents recorded in North West Metro's local government areas changes over time? (\@ref(HAO-3))
 
-*  To understand the criminal activity better, it will not only show the record changes over time but also the changes of offence sub-groups and sub-divisions. This will provide a precise landscape of criminal activities in Victoria.
+*  To understand the criminal activity better, it will not only show the record changes over time but also the changes of offense sub-groups and sub-divisions. This will provide a precise landscape of criminal activities in Victoria.
 
-   *  For each LGA, which offence_subdivision, recorded maximum incidents? (\@ref(JIA-1))
-   *  For each LGA, Which offence_subgroup was most recorded in the previous found offence_subdivision's? (\@ref(JIA-2))
-   *  What was the trend of each offence_subgroup found over the years? (\@ref(JIA-3))
+   *  For each LGA, which offense_subdivision, recorded maximum incidents? (\@ref(JIA-1))
+   *  For each LGA, Which offense_subgroup was most recorded in the previous found offense_subdivision's? (\@ref(JIA-2))
+   *  What was the trend of each offense_subgroup found over the years? (\@ref(JIA-3))
 
 *  Building on the previous analysis, this part will explore the dissect of criminal activities among different **suburbs** or **towns** in Victoria.
 
-   *  What are the top 10 Suburbs wth maximum no of incidents so far? (\@ref(KG-1))
+   *  What are the top 10 Suburbs with maximum no of incidents so far? (\@ref(KG-1))
    *  What are the top 10 Suburb's recorded with most number of incidents in each Year? (\@ref(KG-2))
-   *  What were the top 10 Offence's in each year? (\@ref(KG-3))
-   *  What are the top 2 Offences for the most affected Suburb's found in figure \@ref(fig:Q1)? (\@ref(KG-4))
-   *  What is the trend of top 2 offences in each year w.r.t most affected Suburb? (\@ref(KG-5))
+   *  What were the top 10 Offense's in each year? (\@ref(KG-3))
+   *  What are the top 2 Offenses for the most affected Suburb's found in figure \@ref(fig:Q1)? (\@ref(KG-4))
+   *  What is the trend of top 2 offenses in each year w.r.t most affected Suburb? (\@ref(KG-5))
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, eval = TRUE, fig.align = "center", fig.path = "Figures/",message = FALSE, warning = FALSE)
@@ -238,7 +242,7 @@ ggplot(aes(x=as.numeric(Year),
 The figure \@ref(fig:vis2)  shows
 
 *  **Theft** cases have far exceeded other types of crime in the past **5** years, especially reaching a peak (about **156,000**) in **2016**, but the number has declined in the past **2** years.
-*  **Burglary**/**Break and Enter** (about **38,000**) and **Assault and Related Offence** (about **37,000**) rank **2nd** and **3rd**, respectively.
+*  **Burglary**/**Break and Enter** (about **38,000**) and **Assault and Related Offense** (about **37,000**) rank **2nd** and **3rd**, respectively.
 
 
 ### Which offence_subgroup was most recorded in the previous found offence_subdivision’s? [\@ref(INTRO)] {#JIA-2}
@@ -266,7 +270,7 @@ ggplot(aes(Year,
 The figure \@ref(fig:vis3) shows
 
 *  Among thefts, ***steal from a motor vehicle*** has the largest number during the last **5** years. In **2016**, about **63,000** steal from a motor vehicle occurred, but the number of thefts has decreased in the past **2** years.
-*  Other Theft is second (around **40000**), and other offence-subgroup make up only a small fraction.
+*  Other Theft is second (around **40000**), and other offense-subgroup make up only a small fraction.
 
 
 ###  What was the trend of each offence_subgroup over the years? [\@ref(INTRO)] {#JIA-3}
@@ -297,15 +301,9 @@ criminaluse3 <- criminaldata %>%
 The figure \@ref(fig:vis4)  shows
 
 *  Most have seen a decline in crime over the past **5** year, and almost all have seen a small spike in 2016.
-*  ***Steal from a motor vehicle*** in the category of theft has been in the first place in the past **5** years, with about **50,000** cases occurring every year, far exceeding other offence-subgroups.
+*  ***Steal from a motor vehicle*** in the category of theft has been in the first place in the past **5** years, with about **50,000** cases occurring every year, far exceeding other offense-subgroups.
 *  Other Theft is in second place (about **39,000** per year) and **Criminal Damage** is **3rd** (about **35,000** per year). However, the gap between these two types of crimes and steal from a motor vehicle has gradually widened since **2013**.
 *  Since **2019**, ***public health and safety*** cases have risen sharply, with almost no cases in 2019 but rising to about **37,000** in **2020**.
-
-### Inference:
-
-*  In each LGA, theft occurs most frequently in offence_subdivision and the incidence of thefts is far greater than other types of offence_subdivision.
-*  In the theft offence_subdivision, the vast majority are steal from a motor vehicle and other Theft.
-*  Of all offence_subgroups, Steal from a motor vehicle in all offence_subgroups, Other Theft and Criminal Damage were the top three, but the vast majority of offence_subgroups were up in 2016, but have declined in the last two years.
 
 
 ## PART-3
@@ -338,7 +336,7 @@ data3 %>%
 
 The table \@ref(tab:Q1-table) clearly states that:
 
-*  **Melbourne** had maximum no of incidents with more than 1.5 lakh over the years 
+*  **Melbourne** had maximum no of incidents with more than 1.5 lac over the years 
 *  Other suburbs had 60K incidents in total for each. 
 
 
@@ -364,9 +362,9 @@ data3 %>%
 ```
 The Figure \@ref(fig:Q1) depicts that:
 
-*  **Melbourne** not only had overall maximum incidents, but also had the maxiimum crime in each year.
+*  **Melbourne** not only had overall maximum incidents, but also had maximum incidents in each year.
 *  It had least no of crimes in year **2015**.
-*  Suprisiingly, **Melbourne** saw a massive fall of 10K in crime no. from 2019-2020, mqybe due to lockdown restrictions imposed  during COVID-19.
+*  Surprisingly, **Melbourne** saw a massive fall of 10K in crime no. from 2019-2020, maybe due to lockdown restrictions imposed  during COVID-19.
 
 
 ### What were the top 10 Offence's in each year? [\@ref(INTRO)] {#KG-3}
@@ -394,7 +392,7 @@ data3 %>%
 The Figure \@ref(fig:Q2) showcases that:
 
 *  **Theft** was the most occurred crime across all the years.
-*  **Burglary/Break and enter** type of offence decreased over the years.
+*  **Burglary/Break and enter** type of offense decreased over the years.
 
 
 ### What are the top 2 Offences for the most affected Suburb's found in figure \@ref(fig:Q1)? [\@ref(INTRO)] {#KG-4}
@@ -455,10 +453,37 @@ ggplotly(Q4graoh)
 
 The Figure \@ref(fig:Q4) depicts that:
 
-*  Crime rate of the 2 most occured offences im the affected Suburbs were pretty much steafy along the years.
-*  Im **Melbourne**.
+*  Crime rate of the 2 most occurred offenses in the affected Suburbs were pretty much steady along the years.
+*  In **Melbourne**.
    *  **Disorderly and offensive conduct** crime went off radar after 2014.
-   *  **Breachers of order** were only seen from years 2015-2019.
-   *  **Miscellaneous offence** came into action in year 2020.
+   *  **Breakers of order** were only seen from years 2015-2019.
+   *  **Miscellaneous offense** came into action in year 2020.
    
+# CONCLUSION
 
+Following points could be inferred from the above report:
+
+*  **North West Metro** police region has recorded maximum incidents.
+*  Number of **deception** cases are in a continuous increase.
+*  There is a tendency that the number of incidents recorded is increasing since **2019**.
+*  In each LGA, theft occurs most frequently in offense-subdivision and it's occurrence is far greater than other types of offense-subdivision.
+*  In the theft offense-subdivision, the vast majority are **steal from a motor vehicle** and **other Theft**.
+*  Of all offense-subgroups, **Steal from a motor vehicle**, **Other Theft** and **Criminal Damage** were the top three, but the vast majority of offense-subgroups were up in **2016**, but have declined in the last **2** years.
+*  **Melbourne** not only had overall maximum incidents, but also had maximum incidents in each year.
+*  **Burglary/Break and enter** type of offense decreased over the years.
+
+## Bibliography
+
+@R-bookdown
+@R-dplyr
+@R-ggplot2
+@R-here
+@R-kableExtra
+@R-knitr
+@R-naniar
+@R-haven
+@R-plotly
+@R-readxl
+@R-tidytext
+@R-tidyverse
+@R-ggResidpanel
