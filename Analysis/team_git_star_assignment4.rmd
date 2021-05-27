@@ -1,8 +1,8 @@
 ---
-title: "team_git_star_assignment4"
-Subtitle: "Analysis report for criminal incidents in Victoria"
-author: "ZIYAO WANG (Billy)"
-date: "2021/5/15"
+title: "Analysis report for criminal incidents in Victoria"
+Subtitle: "Team_Git_Star_Assignment-4"
+author: "Ziyao Wang (Billy), Jiaying Zhang (30930685), Karan Garrg (32106580)"
+date: '`r Sys.Date()`'
 output:
   bookdown::html_document2: 
               css: monashreport.css
@@ -14,31 +14,30 @@ output:
 keep_md: true    
 ---
 
-# Introduction
+# INTRODUCTION {#INTRO}
 
+The [data](https://www.crimestatistics.vic.gov.au/crime-statistics/latest-victorian-crime-data/download-data-0) used for the analysis records the criminal incidents in Victoria from **December,2011** to **December,2020**.  It is collected from the [Crime Statistics Agency](https://www.crimestatistics.vic.gov.au/about-us/contact-us) of Victoria Government. The copyright is under the [CC-BY 4.0 license](https://creativecommons.org/licenses/by/4.0/), which allows the team to apply the data analysis with minimum restrictions on the use of the data.
 
+The ***purpose of this analysis report*** is to assist the policy maker to adjust or re-assign the police resources, possibly providing some insights on the future development on the social security.
 
-# Research questions:
+In the data analysis, it contains three main parts:
 
+*  To obtain an overview of the criminal incidents among Victoria's police regions. Also, observing the changes of incidents recorded over time to seek some trend or pattern in different local goverment areas.
 
-Section 1 - Table 1
+   *  Which police region has the greatest number of incidents recorded? (\@ref(HAO-1))
+   *  How did the trend of incidents recorded in those police regions varied across the years? (\@ref(HAO-2))
+   *  What is the trend of incidents recorded in North West Metro's local government areas changes over time? (\@ref(HAO-3))
 
-- [ ] Which police region has the greatest number of incidents recorded?
-- [ ] How did the trend of incidents recorded in those police regions varied across the years?
-- [ ] What is the trend of incidents recorded in North West Metro's local government areas changes over time?
+*  To understand the criminal activity better, it will not only show the record changes over time but also the changes of offence sub-groups and sub-divisions. This will provide a precise landscape of criminal activities in Victoria.
 
-Section 2
+   *  For each LGA , which offence_subdivision, recorded maximum incidents
+   *  For each LGA,Which offence_subgroup was most recorded in the previous found offence_subdivision's?
+   *  What was the trend of each offence_subgroup found over the years?
 
-- [ ] For each LGA , which offence_subdivision, recorded maximum incidents
+*  Building on the previous analysis, this part will explore the dissect the criminal activities among different suburbs or towns in Victoria.
 
-- [ ] For each LGA,Which offence_subgroup was most recorded in the previous found offence_subdivision's?
-- [ ] Which offence_subgroup was most recorded in the previous found offence_subdivision's?
-- [ ] What was the trend of each offence_subgroup found over the years?
-
-Section 3
-
-- [ ] For each Suburb/Town, which offence_subdivision, recorded maximum incidents
-- [ ] For each Suburb/Town,Which offence_subgroup was most recorded in the previous found offence_subdivision's?
+   *  For each Suburb/Town, which offence_subdivision, recorded maximum incidents
+   *   For each Suburb/Town,Which offence_subgroup was most recorded in the previous found offence_subdivision's?
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, eval = TRUE, fig.align = "center", fig.path = "Figures/",message = FALSE, warning = FALSE)
@@ -59,6 +58,12 @@ library(naniar)
 library(tidytext)
 ```
 
+# STATISTIICAL AND GRAPHICAL ANALYSIS
+
+## PART-1 {#PART-1}
+
+**Note:** The data for \@ref(PART-1) analysis has excluded the criminal incidents where the geographic location is unknown. For further information on these geographic locations please refer to the Explanatory Notes and Glossary on this [website](https://www.crimestatistics.vic.gov.au/about-the-data/explanatory-notes#Data%20source%20%E2%80%93%20Victoria%20Police).
+
 ```{r cleandata, include=FALSE}
 dat <- read_excel(here::here("data/Data_Tables_LGA_Criminal_Incidents_Year_Ending_December_2020.xlsx"), sheet=2)
 
@@ -70,11 +75,10 @@ dat <- dat %>%
 ```{r readdata, include=FALSE}
 dat1 <- read.csv(here::here("data/LGA_Criminal_data2020.csv"))
 ```
-# Section 1
 
-Note: The data for section 1 data analysis has excluded the criminal incidents where the geographic location is unknown. For further information on these geographic locations please refer to the Explanatory Notes and Glossary on the [website](https://www.crimestatistics.vic.gov.au/about-the-data/explanatory-notes#Data%20source%20%E2%80%93%20Victoria%20Police).
 
-## Q1 Which police region has the greatest number of incidents recorded?
+
+### Which police region has the greatest number of incidents recorded? [\@ref(INTRO)] {#HAO-1} 
 
 From the table \@ref(tab:table1), it shows an overview of the total number of incidents recorded for each police region from 2011 to 2020. It indicates that the North West Metro police region has recorded maximum incidents during the period. 
 
@@ -91,15 +95,13 @@ table1 <- dat_tot %>%
 table1
 
 ```
-## Q2 How did the trend of incidents recorded in those police regions varied across the years? 
+
+### How did the trend of incidents recorded in those police regions varied across the years? [\@ref(INTRO)] {#HAO-2}
 
 Figure \@ref(fig:total) presents the movement of the incidents recorded for each police region over time. 
 
-In the four main police regions of Victoria, it illustrates an evident fact that the number of incidents recorded has reached the peak around early 2016, then has a sudden pungle afterward.
-
-The possible reason behind may be that the large decrease on the number of burglary and theft from 2016 to 2017, according to the report from [Victoria crime statistics](https://www.crimestatistics.vic.gov.au/crime-statistics/latest-victorian-crime-data/victim-reports-2).
-
-Additionally, this report states that the number of deception cases is in a continuous increase, which may due to the convenience of technology of e-mail, mobile phones and the internet. Thus, it may highlight some areas for re-enforcement in the future, such as cyber security and private data privacy.
+*  In the four main police regions of Victoria, it illustrates an evident fact that the number of incidents recorded has reached the peak around early 2016, then has a sudden plunge afterward.
+*  The possible reason behind may be that the large decrease on the number of **burglary** and **theft** from 2016 to 2017, according to the report from [Victoria crime statistics](https://www.crimestatistics.vic.gov.au/crime-statistics/latest-victorian-crime-data/victim-reports-2).
 
 ```{r total,fig.cap = "Total number of incidents recorded in each police region", fig.height=8, fig.align='center',fig.width=10}
 dat_var <- dat1 %>% 
@@ -119,15 +121,21 @@ figure1 <- ggplot(dat_var, aes(x= Year,
 ggplotly(figure1)
 ```
 
-## Q3 What is the trend of incidents recorded in North West Metro's local government areas changes over time?
+Additionally, this report states that the number of deception cases is in a continuous increase, which may  be due to the convenience of technology of e-mail, mobile phones and the internet. Thus, it may highlight some areas for re-enforcement in the future, such as cyber security and private data privacy.
 
-The observation from table \@ref(tab:table1) triggers an interest for further investigation on the North West Metro police region. 
+
+### What is the trend of incidents recorded in North West Metro's local government areas changes over time? [\@ref(INTRO)] {#HAO-3}
+
+The observation from table \@ref(tab:table1) triggers an interest for further investigation on the **North West Metro** police region. 
 
 Since it is the most incidents recorded region, constructing a figure \@ref(fig:north) to observe the change of the number of incidents recorded in different local government areas may provide some insights. 
 
-The figures suggest that there is a tendency that the number of incidents recorded is increasing since 2019. This can provide some suggestions to the government in terms of adjusting the public safety policy and assigning the police resources. 
+The figures suggest that
 
-Yet, few exceptions such as Hobsons Bay, Moonee Valley and Banyule, the reason maybe they are not the major resident area hence fewer criminal activities occurrence.
+*  There is a tendency that the number of incidents recorded is increasing since 2019. 
+*  This can provide some suggestions to the government in terms of adjusting the public safety policy and assigning the police resources. 
+
+Yet, few exceptions such as **Hobsons Bay**, **Moonee Valley** and **Banyule**, the reason maybe they are not the major resident area hence fewer criminal activities occurrence.
 
 
 ```{r north, fig.cap = "Crimial activity trend in different suburbs from North West Metro", fig.align='center', fig.height=11,fig.width=10}
@@ -168,9 +176,10 @@ ggplotly(figure2)
 ```
 
 
-# Section 2
+## PART-2
 
-## For each LGA , which offence_subdivision, recorded maximum incidents
+### For each LGA , which offence_subdivision, recorded maximum incidents
+
 ```{r read-data, include=FALSE}
 criminaldata <- read_excel(here::here("data/Data_Tables_LGA_Criminal_Incidents_Year_Ending_December_2020.xlsx"), sheet = 4)
 ```
