@@ -36,29 +36,32 @@ Row
 ----
 ### **Data Description**
 
-The [data](https://www.crimestatistics.vic.gov.au/crime-statistics/latest-victorian-crime-data/download-data-0) used for the analysis records the criminal incidents in Victoria from 2010 December to 2020 December.  It is collected from the [Crime Statistics Agency](https://www.crimestatistics.vic.gov.au/about-us/contact-us) of Victoria Government. The copyright is under the [CC-BY 4.0 license](https://creativecommons.org/licenses/by/4.0/), which allows the team to apply the data analysis with minimum restrictions on the use of the data.
+The [data](https://www.crimestatistics.vic.gov.au/crime-statistics/latest-victorian-crime-data/download-data-0) used for the analysis records the criminal incidents in Victoria from **December,2011** to **December,2020**.  It is collected from the [Crime Statistics Agency](https://www.crimestatistics.vic.gov.au/about-us/contact-us) of Victoria Government. The copyright is under the [CC-BY 4.0 license](https://creativecommons.org/licenses/by/4.0/), which allows the team to apply the data analysis with minimum restrictions on the use of the data.
 
-The **purpose of this analysis report** is to assist the policy maker to adjust or re-assign the police resources, possibly providing some insights on the future development on the social security.
+The ***purpose of this analysis report*** is to assist the policy maker to adjust or re-assign the police resources, possibly providing some insights on the future development on the social security.
 
 In the data analysis, it contains three main parts:
 
-- 1 To obtain an overview of the criminal incidents among Victoria's police regions. Also, observing the changes of incidents recorded over time to seek some trend or pattern in different local goverment areas.
+*  To obtain an overview of the criminal incidents among Victoria's **police regions**. Also, observing the changes of incidents recorded over time to seek some trend or pattern in different local government areas.
 
-  - [ ] Which police region has the greatest number of incidents recorded?
-  - [ ] How did the trend of incidents recorded in those police regions varied across the years?
-  - [ ] What is the trend of incidents recorded in North West Metro's local government areas changes over time?
+   *  Which police region has the greatest number of incidents recorded? 
+   *  How did the trend of incidents recorded in those police regions varied across the years?
+   *  What is the trend of incidents recorded in North West Metro's local government areas changes over time? 
 
-- 2 To understand the criminal activity better, it will not only show the record changes over time but also the changes of offence sub-groups and sub-divisions. This will provide a precise landscape of criminal activities in Victoria.
+*  To understand the criminal activity better, it will not only show the record changes over time but also the changes of offense sub-groups and sub-divisions. This will provide a precise landscape of criminal activities in Victoria.
 
-  - [ ] For each LGA , which offence_subdivision, recorded maximum incidents
-  - [ ] For each LGA,Which offence_subgroup was most recorded in the previous found offence_subdivision's?
-  - [ ] What was the trend of each offence_subgroup found over the years?
+   *  For each LGA, which offense_subdivision, recorded maximum incidents? 
+   *  For each LGA, Which offense_subgroup was most recorded in the previous found offense_subdivision's?
+   *  What was the trend of each offense_subgroup found over the years? 
 
-- 3 Building on the previous analysis, this part will explore the dissect the criminal activities among different suburbs or towns in Victoria.
+*  Building on the previous analysis, this part will explore the dissect of criminal activities among different **suburbs** or **towns** in Victoria.
 
-  - [ ] For each Suburb/Town, which offence_subdivision, recorded maximum incidents
-  - [ ] For each Suburb/Town,Which offence_subgroup was most recorded in the previous found offence_subdivision's?
-
+   *  What are the top 10 Suburbs with maximum no of incidents so far? 
+   *  What are the top 10 Suburb's recorded with most number of incidents in each Year? 
+   *  What were the top 10 Offense's in each year? 
+   *  What are the top 2 Offenses for the most affected Suburb's found in figure \@ref(fig:Q1)?
+   *  What is the trend of top 2 offenses in each year w.r.t most affected Suburb? 
+   
 Row
 -----
 
